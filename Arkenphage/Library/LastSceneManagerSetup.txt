@@ -1,0 +1,4 @@
+sceneSetups:
+- path: Assets/Inventory UI/2D Controls/2D Platform Proto.unity
+  isLoaded: 1
+  isActive: 1
