@@ -7,20 +7,25 @@ public class FireLoop : EnemyAI{
     public GameObject bullet;
     public Transform firePoint;
     public float timeBetweenShots;
-    float timeReset;
+    protected bool shoot = true;
+    protected float timeReset;
 
-    private void Start()
+    void Start()
     {
         timeReset = timeBetweenShots;
     }
 
     // Update is called once per frame
     void Update () {
-        timeBetweenShots -= Time.deltaTime;
-        if (timeBetweenShots < 0)
+        if (shoot == true)
         {
-            FireBullet();
-            timeBetweenShots = timeReset;
+            timeBetweenShots -= Time.deltaTime;
+            if (timeBetweenShots < 0)
+            {
+                FireBullet();
+                timeBetweenShots = timeReset;
+                print(timeBetweenShots + "  " + timeReset);
+            }
         }
 	}
 

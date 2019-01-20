@@ -299,6 +299,7 @@
     <Compile Include="Assets\Enemy AI\Enemies\FireLoop.cs" />
     <Compile Include="Assets\Enemy AI\Enemies\FlyAndSwoopEnemy.cs" />
     <Compile Include="Assets\Enemy AI\Enemies\FlyingEnemy.cs" />
+    <Compile Include="Assets\Enemy AI\Enemies\HitAndRunEnemy.cs" />
     <Compile Include="Assets\Enemy AI\Enemies\MedusaHead.cs" />
     <Compile Include="Assets\Enemy AI\Enemies\MeleeEnemyA.cs" />
     <Compile Include="Assets\Enemy AI\Projectiles\Bullet.cs" />

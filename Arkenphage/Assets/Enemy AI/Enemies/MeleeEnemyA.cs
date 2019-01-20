@@ -18,11 +18,6 @@ public class MeleeEnemyA : EnemyAI {
         rb = GetComponent<Rigidbody2D>();
         origPos = transform.position;
     }
-	
-	// Update is called once per frame
-	void Update () {
-
-	}
 
     private void FixedUpdate()
     {

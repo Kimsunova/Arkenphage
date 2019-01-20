@@ -24,7 +24,6 @@ public class InventoryUI : MonoBehaviour {
         slots = itemsParent.GetComponentsInChildren<InventorySlot>();
 
         groupCount = System.Enum.GetNames(typeof(Item.Type)).Length;
-        print(groupCount);
 
         for (int i = 0; i < groupCount; i++)
         {
