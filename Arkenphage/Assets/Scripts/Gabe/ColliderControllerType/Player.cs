@@ -3,6 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityStandardAssets.CrossPlatformInput;
 
+public enum PlayerState
+{
+    walk,
+    attack,
+    interact,
+    stagger,
+    idle
+}
+
 [RequireComponent(typeof(Rigidbody2D), typeof(Animator), typeof(Collider2D))]
 public class Player : MonoBehaviour
 {
@@ -15,12 +24,19 @@ public class Player : MonoBehaviour
 
     //Player State
     bool jump = false;
+    public PlayerState currentState;
+    public FloatValue currentHealth;
+    public Signal playerHealthSignal;
+    public Signal playerHit;
+
 
     //Cached Component References
     Rigidbody2D playerRigidBody;
     Animator playerAnimator;
     CapsuleCollider2D playerBodyCollider;
     CircleCollider2D playerFeetCollider;
+    PolygonCollider2D attackHitBox;
+
 
 
     void Start()
@@ -29,15 +45,33 @@ public class Player : MonoBehaviour
         playerAnimator = GetComponent<Animator>();
         playerBodyCollider = GetComponent<CapsuleCollider2D>();
         playerFeetCollider = GetComponent<CircleCollider2D>();
+        currentState = PlayerState.walk;
+        attackHitBox = GetComponentInChildren<PolygonCollider2D>();
 
     }
 
     void Update()
     {
-        Run();
+        if (currentState == PlayerState.interact)
+        {
+            return;
+        }
+
+        //new
+        if (CrossPlatformInputManager.GetButtonDown("Fire1") && currentState != PlayerState.attack && currentState != PlayerState.stagger)
+        {
+            StartCoroutine(AttackCo());
+        }
+        else if (currentState == PlayerState.walk || currentState == PlayerState.idle)
+        {
+            //UpdateAnimationAndMove();
+            Run();
+        }
+
+        
         FlipSprite();
         Jump();
-        Attack();
+        //Attack();
         Falling();
 
     }
@@ -94,25 +128,98 @@ public class Player : MonoBehaviour
         playerAnimator.SetBool("Falling", playerIsFalling);
     }
 
-    private void Attack()
-    {
-        if (!playerFeetCollider.IsTouchingLayers(LayerMask.GetMask("Ground")))
-        {
-            return;//can only do attack while grounded, don't keep this though? or have two separate grounded and flying attacks?
-        }
+    //private void Attack()
+    //{
 
-        if (CrossPlatformInputManager.GetButtonDown("Fire1"))
-        {
-            playerAnimator.SetTrigger("Attack");
-        }
-    }
+    //    //old
+    //    if (!playerFeetCollider.IsTouchingLayers(LayerMask.GetMask("Ground")))
+    //    {
+    //        return;//can only do attack while grounded, don't keep this though? or have two separate grounded and flying attacks?
+    //    }
+
+    //    if (CrossPlatformInputManager.GetButtonDown("Fire1"))
+    //    {
+    //        playerAnimator.SetTrigger("Attack");
+    //    }
+    //    //end old
+
+
+    //}
 
     private void FlipSprite()
     {
+        if (currentState == PlayerState.stagger)
+            return;//so player doesn't turn around when staggered
+
         bool playerHasHorizontalSpeed = Mathf.Abs(playerRigidBody.velocity.x) > Mathf.Epsilon; //if player is moving because epsilon is the smallest float
         if (playerHasHorizontalSpeed)
         {
             transform.localScale = new Vector2(Mathf.Sign(playerRigidBody.velocity.x), 1f);
+        }
+    }
+
+
+    private IEnumerator AttackCo()
+    {
+        //new
+        playerAnimator.SetTrigger("Attack");
+        currentState = PlayerState.attack;
+
+
+        //playerAnimator.SetBool("attacking", true);//should be trigger and no need for coroutine?
+        //currentState = PlayerState.attack;
+        //yield return null;//waits one frame
+        //playerAnimator.SetBool("attacking", false);//so it won't go back in here (why not just use a trigger type?)
+        yield return new WaitForSeconds(.3f);//this still needed?
+        if (currentState != PlayerState.interact)
+        {
+            currentState = PlayerState.walk;
+        }
+    }
+
+    //public void RaiseItem()
+    //{
+    //    if (playerInventory.currentItem != null)
+    //    {
+    //        if (currentState != PlayerState.interact)
+    //        {
+    //            playerAnimator.SetBool("receive item", true);
+    //            currentState = PlayerState.interact;
+    //            receivedItemSprite.sprite = playerInventory.currentItem.itemSprite;
+    //        }
+    //        else
+    //        {
+    //            playerAnimator.SetBool("receive item", false);
+    //            currentState = PlayerState.idle;
+    //            receivedItemSprite.sprite = null;
+    //            playerInventory.currentItem = null;
+    //        }
+    //    }
+    //}
+
+    public void Knock(float knockTime, float damage)
+    {
+        currentHealth.RuntimeValue -= damage;
+        playerHealthSignal.Raise();
+        if (currentHealth.RuntimeValue > 0)
+        {
+            playerHit.Raise();
+            StartCoroutine(KnockCo(knockTime));
+        }
+        else
+        {
+            this.gameObject.SetActive(false);
+        }
+    }
+
+    private IEnumerator KnockCo(float knockTime)
+    {
+        if (playerRigidBody != null)
+        {
+            yield return new WaitForSeconds(knockTime);
+            playerRigidBody.velocity = Vector2.zero;
+            currentState = PlayerState.idle;//set back to idel after being knocked (was set to stagger before getting in here)
+            playerRigidBody.velocity = Vector2.zero;
         }
     }
 }
