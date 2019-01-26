@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/Inventory UI/2D Controls/2D Platform Proto.unity
+- path: Assets/Scenes/GabePlayerControllerScene.unity
   isLoaded: 1
   isActive: 1
