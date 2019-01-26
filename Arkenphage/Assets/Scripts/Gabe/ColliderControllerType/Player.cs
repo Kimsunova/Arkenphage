@@ -20,7 +20,7 @@ public class Player : MonoBehaviour
     Rigidbody2D playerRigidBody;
     Animator playerAnimator;
     CapsuleCollider2D playerBodyCollider;
-    BoxCollider2D playerFeetCollider;
+    CircleCollider2D playerFeetCollider;
 
 
     void Start()
@@ -28,7 +28,7 @@ public class Player : MonoBehaviour
         playerRigidBody = GetComponent<Rigidbody2D>();
         playerAnimator = GetComponent<Animator>();
         playerBodyCollider = GetComponent<CapsuleCollider2D>();
-        playerFeetCollider = GetComponent<BoxCollider2D>();
+        playerFeetCollider = GetComponent<CircleCollider2D>();
 
     }
 

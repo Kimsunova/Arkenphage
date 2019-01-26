@@ -24,7 +24,8 @@ GameObject:
   - component: {fileID: 50247714503794938}
   - component: {fileID: 70489203961880820}
   - component: {fileID: 114729636656037980}
-  m_Layer: 0
+  - component: {fileID: 58240750263349922}
+  m_Layer: 9
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -62,10 +63,10 @@ Rigidbody2D:
   m_Material: {fileID: 0}
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 4
---- !u!70 &70489203961880820
-CapsuleCollider2D:
+--- !u!58 &58240750263349922
+CircleCollider2D:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
@@ -76,8 +77,23 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.05902183, y: -0.0039668083}
-  m_Size: {x: 0.7083825, y: 1.7604337}
+  m_Offset: {x: 0, y: -0.674186}
+  serializedVersion: 2
+  m_Radius: 0.23206401
+--- !u!70 &70489203961880820
+CapsuleCollider2D:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1118658609928122}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 6200000, guid: 4a01c1fc87b697445b6e60fb2f3e805b, type: 2}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0.061662793}
+  m_Size: {x: 1, y: 1.7317393}
   m_Direction: 0
 --- !u!95 &95337220458569836
 Animator:
@@ -110,8 +126,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   runSpeed: 8
   jumpStrength: 20
-  climbSpeed: 5
-  fallAnimationInitiateSpeed: 10
+  fallAnimationInitiateSpeed: 0.1
 --- !u!212 &212686842324294432
 SpriteRenderer:
   m_ObjectHideFlags: 1
