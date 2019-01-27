@@ -42,11 +42,11 @@ public class Knockback : MonoBehaviour
 
                 if (otherIsEnemy)// was also  && other.isTrigger but not needed because other will be collider of enemey
                 {
-                    if (enemy.currentState != EnemyState.stagger)
+                    if (enemy.currentState != EnemyState.stagger)//this means can't hit enemy again while they are staggered?
                     {
                         enemy.currentState = EnemyState.stagger;
-                        enemy.Knock(hit, knockTime, damage);
                     }
+                    enemy.Knock(hit, knockTime, damage);//so enemy can be hurt even if staggered
                 }
 
                 if (otherIsPlayer)
@@ -54,8 +54,8 @@ public class Knockback : MonoBehaviour
                     if (player.currentState != PlayerState.stagger)
                     {
                         player.currentState = PlayerState.stagger;
-                        player.Knock(knockTime, damage);
                     }
+                    player.Knock(knockTime, damage);//so player can be hurt if staggered
                 }
             }
         }

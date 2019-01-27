@@ -45,7 +45,7 @@ public class RadiusAwakenedEnemy : Enemy
     {
         if (Vector3.Distance(target.position, transform.position) <= chaseRadius && Vector3.Distance(target.position, transform.position) > attackRadius)
         {
-            if (currentState == EnemyState.idle || currentState == EnemyState.walk && currentState != EnemyState.stagger)
+            if ((currentState == EnemyState.idle || currentState == EnemyState.walk) && (currentState != EnemyState.stagger && currentState != EnemyState.dead))
             {
 
                 Vector3 targetGroundPosition = new Vector3(target.position.x, transform.position.y, target.position.z);
@@ -58,7 +58,7 @@ public class RadiusAwakenedEnemy : Enemy
 
             }
         }
-        if (Vector3.Distance(target.position, transform.position) < attackRadius)
+        if (Vector3.Distance(target.position, transform.position) < attackRadius && (currentState != EnemyState.stagger && currentState != EnemyState.dead))
         {
             ChangeState(EnemyState.attack);
             myAnimator.SetBool("IsWalking", false);
@@ -69,6 +69,8 @@ public class RadiusAwakenedEnemy : Enemy
         if (Vector3.Distance(target.position, transform.position) > chaseRadius)
         {
             myAnimator.SetBool("IsWalking", false);
+            ChangeState(EnemyState.idle);
+
             //myAnimator.SetBool("IsIdle", true);
 
         }

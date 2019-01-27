@@ -40,18 +40,19 @@ public class Enemy : MonoBehaviour
         health -= damage;
         if (health <= 0)
         {
-            StartCoroutine(DeathEffect());
+            DeathEffect();
             //this.gameObject.SetActive(false);
         }
     }
 
-    private IEnumerator DeathEffect()
+    private void DeathEffect()
     {
-        isDead = true;
         myAnimator.SetBool("IsDead", true);
-        yield return new WaitForSeconds(deathTime);
+        isDead = true;
         currentState = EnemyState.dead;
-        this.gameObject.SetActive(false);
+        Destroy(this.gameObject, 2f);//this isntead of above disable?
+        //yield return new WaitForSeconds(0);//should it wait at all? is this just making sure it does stagger first and then death animation?
+        //this.gameObject.SetActive(false, 1f);
         //uncomment below for adding a death particle effect if desired
         //if (deathEffect != null)
         //{
@@ -62,9 +63,9 @@ public class Enemy : MonoBehaviour
 
     public void Knock(Rigidbody2D myRigidbody, float knockTime, float damage)
     {
+        TakeDamage(damage);//take damage before knockco in case this hit kills target so goes straight to death animation and not stagger first
         myAnimator.SetBool("Stagger", true);//does this do anything?
         StartCoroutine(KnockCo(myRigidbody, knockTime));
-        TakeDamage(damage);
     }
 
     private IEnumerator KnockCo(Rigidbody2D myRigidbody, float knockTime)
@@ -73,9 +74,9 @@ public class Enemy : MonoBehaviour
         {
             yield return new WaitForSeconds(knockTime);
             myRigidbody.velocity = Vector2.zero;
-            currentState = EnemyState.stagger;
-            myRigidbody.velocity = Vector2.zero;
+            //myRigidbody.velocity = Vector2.zero;
             myAnimator.SetBool("Stagger", false);
+            currentState = EnemyState.idle;//set it back to idle after doing knockback animation and time so it can keep walking towards target in radiusawakened enemy
 
         }
     }
