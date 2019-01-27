@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityStandardAssets.CrossPlatformInput;
 
 public enum PlayerState
@@ -9,7 +10,8 @@ public enum PlayerState
     attack,
     interact,
     stagger,
-    idle
+    idle,
+    dead
 }
 
 [RequireComponent(typeof(Rigidbody2D), typeof(Animator), typeof(Collider2D))]
@@ -148,8 +150,8 @@ public class Player : MonoBehaviour
 
     private void FlipSprite()
     {
-        if (currentState == PlayerState.stagger)
-            return;//so player doesn't turn around when staggered
+        if (currentState == PlayerState.stagger || currentState == PlayerState.dead)
+            return;//so player doesn't turn around when staggered or killed
 
         bool playerHasHorizontalSpeed = Mathf.Abs(playerRigidBody.velocity.x) > Mathf.Epsilon; //if player is moving because epsilon is the smallest float
         if (playerHasHorizontalSpeed)
@@ -208,8 +210,17 @@ public class Player : MonoBehaviour
         }
         else
         {
-            this.gameObject.SetActive(false);
+            StartCoroutine(DeathEffect());
         }
+    }
+
+    private IEnumerator DeathEffect()
+    {
+        playerAnimator.SetBool("IsDead", true);
+        currentState = PlayerState.dead;
+        //Destroy(this.gameObject, 3f);
+        yield return new WaitForSeconds(3f);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);//should create separate methods or even classes for scenemanagement later once that is worked out, right now just reloads on player death for debugging
     }
 
     private IEnumerator KnockCo(float knockTime)

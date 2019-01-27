@@ -22,7 +22,6 @@ public class Enemy : MonoBehaviour
     public float moveSpeed;
     public GameObject deathEffect;
     public float deathTime;
-    protected bool isDead = false;
     [SerializeField] protected Animator myAnimator;
 
     private void Start()
@@ -48,7 +47,6 @@ public class Enemy : MonoBehaviour
     private void DeathEffect()
     {
         myAnimator.SetBool("IsDead", true);
-        isDead = true;
         currentState = EnemyState.dead;
         Destroy(this.gameObject, 2f);//this isntead of above disable?
         //yield return new WaitForSeconds(0);//should it wait at all? is this just making sure it does stagger first and then death animation?

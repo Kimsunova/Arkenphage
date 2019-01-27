@@ -27,7 +27,7 @@ public class RadiusAwakenedEnemy : Enemy
     // Update is called once per frame
     void FixedUpdate()
     {
-        if (isDead)
+        if (currentState == EnemyState.dead)
             return;
 
         CheckDistance();
@@ -35,7 +35,7 @@ public class RadiusAwakenedEnemy : Enemy
 
     private void Update()
     {
-        if (isDead)
+        if (currentState == EnemyState.dead)
             return;
 
         FlipSprite();
