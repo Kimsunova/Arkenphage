@@ -50,7 +50,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_IsActive
-    path: AttackHitBox
+    path: PlayerWeaponCollider
     classID: 1
     script: {fileID: 0}
   m_PPtrCurves:
@@ -79,7 +79,7 @@ AnimationClip:
   m_ClipBindingConstant:
     genericBindings:
     - serializedVersion: 2
-      path: 2706796285
+      path: 1327272689
       attribute: 2086281974
       script: {fileID: 0}
       typeID: 1
@@ -154,7 +154,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_IsActive
-    path: AttackHitBox
+    path: PlayerWeaponCollider
     classID: 1
     script: {fileID: 0}
   m_EulerEditorCurves: []
