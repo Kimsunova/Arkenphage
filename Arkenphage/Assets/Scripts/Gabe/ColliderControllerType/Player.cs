@@ -11,7 +11,8 @@ public enum PlayerState
     interact,
     stagger,
     idle,
-    dead
+    dead,
+    falling
 }
 
 [RequireComponent(typeof(Rigidbody2D), typeof(Animator), typeof(Collider2D))]
@@ -64,13 +65,13 @@ public class Player : MonoBehaviour
         {
             StartCoroutine(AttackCo());
         }
-        else if (currentState == PlayerState.walk || currentState == PlayerState.idle)
+        else if (currentState == PlayerState.walk || currentState == PlayerState.idle || currentState == PlayerState.falling)//need falling? should be able to move while falling?
         {
             //UpdateAnimationAndMove();
             Run();
         }
 
-        
+
         FlipSprite();
         Jump();
         //Attack();
@@ -121,14 +122,29 @@ public class Player : MonoBehaviour
 
     private void Falling()
     {
-        bool playerIsFalling = playerRigidBody.velocity.y < -fallAnimationInitiateSpeed; //if player is moving
+
+        if (currentState == PlayerState.dead)
+        {
+            playerAnimator.SetBool("Falling", false);
+            return;
+        }
+
+
+            bool playerIsFalling = playerRigidBody.velocity.y < -fallAnimationInitiateSpeed; //if player is moving
 
         if (playerFeetCollider.IsTouchingLayers(LayerMask.GetMask("Ground")))
         {
             playerIsFalling = false;
         }
 
+
+
+        currentState = PlayerState.falling;
         playerAnimator.SetBool("Falling", playerIsFalling);
+
+
+
+
     }
 
     //private void Attack()
@@ -227,7 +243,8 @@ public class Player : MonoBehaviour
 
     private IEnumerator DeathEffect()
     {
-        playerAnimator.SetBool("IsDead", true);
+        playerAnimator.SetBool("Falling", false);
+        playerAnimator.SetBool("IsDead", true);//why will this not play from falling?
         currentState = PlayerState.dead;//i want to be able to set player state to dead here but it will prevent the death animation from happening sometimes, like maybe when falling?
         //Destroy(this.gameObject, 3f);
         yield return new WaitForSeconds(3f);
