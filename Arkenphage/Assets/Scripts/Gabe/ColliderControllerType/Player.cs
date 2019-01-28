@@ -54,7 +54,7 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-        if (currentState == PlayerState.interact || currentState == PlayerState.dead)
+        if (currentState == PlayerState.interact || currentState == PlayerState.dead || currentState == PlayerState.stagger)
         {
             return;
         }
