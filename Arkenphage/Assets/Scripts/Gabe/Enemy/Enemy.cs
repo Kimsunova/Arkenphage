@@ -48,7 +48,7 @@ public class Enemy : MonoBehaviour
 
     private void DeathEffect()
     {
-        myAnimator.SetBool("IsDead", true);
+        myAnimator.SetBool("IsDead", true);//this is not always working
         
         Destroy(this.gameObject, 4f);//this isntead of above disable?
         //yield return new WaitForSeconds(0);//should it wait at all? is this just making sure it does stagger first and then death animation?
@@ -64,6 +64,10 @@ public class Enemy : MonoBehaviour
     public void Knock(Rigidbody2D myRigidbody, float knockTime, float damage)
     {
         TakeDamage(damage);//take damage before knockco in case this hit kills target so goes straight to death animation and not stagger first
+
+        if(currentState == EnemyState.dead)
+            return;
+        
         myAnimator.SetBool("Stagger", true);//does this do anything?
         StartCoroutine(KnockCo(myRigidbody, knockTime));
     }
