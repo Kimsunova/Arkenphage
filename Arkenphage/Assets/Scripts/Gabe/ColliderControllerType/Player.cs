@@ -207,6 +207,7 @@ public class Player : MonoBehaviour
         if (currentHealth.RuntimeValue > 0)
         {
             playerHit.Raise();
+            playerAnimator.SetBool("Stagger", true);
             StartCoroutine(KnockCo(knockTime));
         }
         else
@@ -239,6 +240,8 @@ public class Player : MonoBehaviour
         {
             yield return new WaitForSeconds(knockTime);
             playerRigidBody.velocity = Vector2.zero;
+            playerAnimator.SetBool("Stagger", false);
+
             currentState = PlayerState.idle;//set back to idel after being knocked (was set to stagger before getting in here)
             playerRigidBody.velocity = Vector2.zero;
         }

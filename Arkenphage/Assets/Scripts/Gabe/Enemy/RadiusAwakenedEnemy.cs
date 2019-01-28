@@ -13,7 +13,8 @@ public class RadiusAwakenedEnemy : Enemy
     //[SerializeField] protected Animator myAnimator;
     private Vector3 previousPosition;
     private Vector3 currentMovementDirection;
-
+    private float previousDirectionScale;
+    private float currentDirectionScale;
 
     // Use this for initialization
     void Start()
@@ -35,8 +36,8 @@ public class RadiusAwakenedEnemy : Enemy
 
     private void Update()
     {
-        if (currentState == EnemyState.dead)
-            return;
+        //if (currentState == EnemyState.dead)
+        //    return;
 
         FlipSprite();
     }
@@ -52,7 +53,7 @@ public class RadiusAwakenedEnemy : Enemy
                 Vector3 temp = Vector3.MoveTowards(transform.position, targetGroundPosition, moveSpeed * Time.deltaTime);
 
                 myRigidbody.MovePosition(temp);
-                ChangeState(EnemyState.walk);
+                //ChangeState(EnemyState.walk);//this doesn't need to be set here I guess?
                 myAnimator.SetBool("IsWalking", true);
                 //myAnimator.SetBool("IsIdle", false);
 
@@ -86,8 +87,10 @@ public class RadiusAwakenedEnemy : Enemy
 
     private void FlipSprite()
     {
-        if (currentState == EnemyState.stagger)
-            return; //don't want it to turn around when staggered
+        if (currentState == EnemyState.stagger || currentState == EnemyState.dead)
+            return; //don't want it to turn around when staggered or dead, still turning when dead though
+
+        previousDirectionScale = currentDirectionScale;
 
         //system permits finding movement direction of a NPC:
         if (previousPosition != transform.position)
@@ -96,6 +99,12 @@ public class RadiusAwakenedEnemy : Enemy
             previousPosition = transform.position;
         }
 
-        transform.localScale = new Vector2(Mathf.Sign(-currentMovementDirection.x), 1f);
+        currentDirectionScale = Mathf.Sign(-currentMovementDirection.x);
+
+        if(currentDirectionScale != previousDirectionScale)
+        {
+            transform.localScale = new Vector2(currentDirectionScale, 1f);
+        }
+
     }
 }

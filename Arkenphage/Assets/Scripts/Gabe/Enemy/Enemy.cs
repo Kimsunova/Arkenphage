@@ -39,7 +39,8 @@ public class Enemy : MonoBehaviour
         health -= damage;
         if (health <= 0)
         {
-            moveSpeed = 0f;
+            currentState = EnemyState.dead;
+            //moveSpeed = .0001f;
             DeathEffect();
             //this.gameObject.SetActive(false);
         }
@@ -48,7 +49,7 @@ public class Enemy : MonoBehaviour
     private void DeathEffect()
     {
         myAnimator.SetBool("IsDead", true);
-        currentState = EnemyState.dead;
+        
         Destroy(this.gameObject, 4f);//this isntead of above disable?
         //yield return new WaitForSeconds(0);//should it wait at all? is this just making sure it does stagger first and then death animation?
         //this.gameObject.SetActive(false, 1f);

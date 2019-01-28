@@ -19,7 +19,7 @@ TagManager:
   - Enemy
   - PlayerWeapon
   - EnemyWeapon
-  - 
+  - Hazards
   - 
   - 
   - 
@@ -52,4 +52,7 @@ TagManager:
     locked: 0
   - name: Foreground
     uniqueID: 2557665577
+    locked: 0
+  - name: Hazards
+    uniqueID: 3280360257
     locked: 0
