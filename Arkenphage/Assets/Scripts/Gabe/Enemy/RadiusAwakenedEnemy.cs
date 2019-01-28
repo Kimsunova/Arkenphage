@@ -64,7 +64,7 @@ public class RadiusAwakenedEnemy : Enemy
             ChangeState(EnemyState.attack);
             myAnimator.SetBool("IsWalking", false);
             myRigidbody.velocity = Vector2.zero;
-            myAnimator.SetTrigger("Attack");
+            myAnimator.SetTrigger("Attack");//because this is a trigger cannot be interrupted by death?
             ChangeState(EnemyState.idle);//should there be a wait for seconds before this?
         }
         if (Vector3.Distance(target.position, transform.position) > chaseRadius)
