@@ -19028,7 +19028,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4332010959866366, guid: 0bb6bdd090f59cf44a1a39d4f880092b, type: 2}
       propertyPath: m_LocalPosition.x
-      value: -12.619997
+      value: -12.619999
       objectReference: {fileID: 0}
     - target: {fileID: 4332010959866366, guid: 0bb6bdd090f59cf44a1a39d4f880092b, type: 2}
       propertyPath: m_LocalPosition.y
@@ -19201,6 +19201,21 @@ Prefab:
       value: 
       objectReference: {fileID: 11400000, guid: cb7f3278e22f3094d9e7d6a9bb50e968,
         type: 2}
+    - target: {fileID: 212686842324294432, guid: 143ad6a4c851b0a4f96645ec533e100a,
+        type: 2}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 212686842324294432, guid: 143ad6a4c851b0a4f96645ec533e100a,
+        type: 2}
+      propertyPath: m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 212686842324294432, guid: 143ad6a4c851b0a4f96645ec533e100a,
+        type: 2}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 143ad6a4c851b0a4f96645ec533e100a, type: 2}
   m_IsPrefabAsset: 0
