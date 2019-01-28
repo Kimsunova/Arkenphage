@@ -30,6 +30,31 @@ public class Knockback : MonoBehaviour
         //    breakable.Smash();
         //}
 
+        if (otherIsPlayer)
+        {
+            if (player.currentState == PlayerState.dead)
+                return;
+        }
+        if (otherIsEnemy)
+        {
+            if (enemy.currentState == EnemyState.dead)
+                return;
+
+        }
+        if (thisIsPlayer)
+        {
+            if (this.GetComponentInParent<Player>().currentState == PlayerState.dead)
+                return;
+        }
+        if (thisIsEnemy)
+        {
+            if (this.GetComponentInParent<Enemy>().currentState == EnemyState.dead)
+                return;
+        }
+
+
+        
+
         //player and enemy tirgger
         if ((otherIsPlayer && thisIsEnemy) || (thisIsPlayer && otherIsEnemy))
         {

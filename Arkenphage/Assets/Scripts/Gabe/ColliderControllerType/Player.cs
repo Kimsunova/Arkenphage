@@ -54,7 +54,7 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-        if (currentState == PlayerState.interact)
+        if (currentState == PlayerState.interact || currentState == PlayerState.dead)
         {
             return;
         }
@@ -75,6 +75,7 @@ public class Player : MonoBehaviour
         Jump();
         //Attack();
         Falling();
+        HazardDeath();
 
     }
 
@@ -214,10 +215,19 @@ public class Player : MonoBehaviour
         }
     }
 
+    private void HazardDeath()
+    {
+
+        if (playerBodyCollider.IsTouchingLayers(LayerMask.GetMask("Hazards")))//its not detectingthe layer mask
+        {
+            StartCoroutine(DeathEffect());
+        }
+    }
+
     private IEnumerator DeathEffect()
     {
         playerAnimator.SetBool("IsDead", true);
-        currentState = PlayerState.dead;
+        //currentState = PlayerState.dead;//i want to be able to set player state to dead here but it will prevent the death animation from happening sometimes
         //Destroy(this.gameObject, 3f);
         yield return new WaitForSeconds(3f);
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);//should create separate methods or even classes for scenemanagement later once that is worked out, right now just reloads on player death for debugging
