@@ -12,7 +12,8 @@ public enum PlayerState
     stagger,
     idle,
     dead,
-    falling
+    falling,
+    grappling
 }
 
 [RequireComponent(typeof(Rigidbody2D), typeof(Animator), typeof(Collider2D))]
@@ -31,6 +32,8 @@ public class Player : MonoBehaviour
     public FloatValue currentHealth;
     public Signal playerHealthSignal;
     public Signal playerHit;
+
+    //public bool IsGrappling { get; set; }//should i use these properties like this?
 
 
     //Cached Component References
@@ -65,7 +68,7 @@ public class Player : MonoBehaviour
         {
             StartCoroutine(AttackCo());
         }
-        else if (currentState == PlayerState.walk || currentState == PlayerState.idle || currentState == PlayerState.falling)//need falling? should be able to move while falling?
+        else if (currentState == PlayerState.walk || currentState == PlayerState.idle || currentState == PlayerState.falling && currentState != PlayerState.grappling)//need falling? should be able to move while falling?
         {
             //UpdateAnimationAndMove();
             Run();
@@ -131,14 +134,22 @@ public class Player : MonoBehaviour
         }
 
 
-            bool playerIsFalling = playerRigidBody.velocity.y < -fallAnimationInitiateSpeed; //if player is moving
+        bool playerIsFalling = playerRigidBody.velocity.y < -fallAnimationInitiateSpeed; //if player is moving
 
         if (playerFeetCollider.IsTouchingLayers(LayerMask.GetMask("Ground")) || playerFeetCollider.IsTouchingLayers(LayerMask.GetMask("DropThroughGround")))
         {
             playerIsFalling = false;
         }
 
-        currentState = PlayerState.falling;
+        if(!(currentState == PlayerState.grappling))
+        {
+            currentState = PlayerState.falling;
+        }
+        else
+        {
+            playerIsFalling = true;//so always on falling animation if grappling (may need to chagne all this around later ifthere is a grappling animation)
+        }
+
         playerAnimator.SetBool("Falling", playerIsFalling);
     }
 
@@ -147,7 +158,6 @@ public class Player : MonoBehaviour
         if (playerFeetCollider.IsTouchingLayers(LayerMask.GetMask("DropThroughGround")))
         {
 
-            print("on dropthrough");
             float verticalInput = CrossPlatformInputManager.GetAxisRaw("Vertical");
 
             if (verticalInput < 0 && CrossPlatformInputManager.GetButtonDown("Jump"))

@@ -24,7 +24,7 @@ public class FireLoop : EnemyAI{
             {
                 FireBullet();
                 timeBetweenShots = timeReset;
-                print(timeBetweenShots + "  " + timeReset);
+                //print(timeBetweenShots + "  " + timeReset);
             }
         }
 	}
