@@ -87,7 +87,7 @@ public class Player : MonoBehaviour
     private void Run()
     {
         float horizontalInput = CrossPlatformInputManager.GetAxisRaw("Horizontal");
-        playerRigidBody.velocity = new Vector2(horizontalInput * runSpeed, playerRigidBody.velocity.y); ;
+        playerRigidBody.velocity = new Vector2(horizontalInput * runSpeed, playerRigidBody.velocity.y);
 
         bool playerHasHorizontalSpeed = Mathf.Abs(playerRigidBody.velocity.x) > Mathf.Epsilon; //if player is moving
         playerAnimator.SetBool("Running", playerHasHorizontalSpeed);

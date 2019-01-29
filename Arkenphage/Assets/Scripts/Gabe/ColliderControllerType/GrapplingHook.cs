@@ -17,6 +17,8 @@ public class GrapplingHook : MonoBehaviour
     [SerializeField] LayerMask layerMaskToReceiveGrapple;
 
     [SerializeField] LineRenderer ropeRenderer;
+    [SerializeField] float swingSpeed;
+    [SerializeField] float distanceBelowJointWhereSwingingIsPermitted;
 
 
     // Use this for initialization
@@ -90,6 +92,17 @@ public class GrapplingHook : MonoBehaviour
             {
                 grappleJoint.distance += Time.deltaTime * 5f;
             }
+
+            //float angleToJoint = Vector2.SignedAngle(grappleJoint.connectedAnchor, new Vector2(this.transform.position.x, this.transform.position.y));
+            //print(angleToJoint);
+            float distanceBelowAnchor = this.transform.position.y - grappleJoint.connectedAnchor.y;
+            print(distanceBelowAnchor);
+            if (distanceBelowAnchor < -distanceBelowJointWhereSwingingIsPermitted)//only allow momentum swinging when below anchor point
+            {
+                float horizontalInput = CrossPlatformInputManager.GetAxis("Horizontal");//not raw cuz want the build up on the swing
+                player.GetComponent<Rigidbody2D>().velocity += new Vector2(horizontalInput * swingSpeed, 0);
+            }
+
         }
 
         if (CrossPlatformInputManager.GetButtonUp("Fire2"))
