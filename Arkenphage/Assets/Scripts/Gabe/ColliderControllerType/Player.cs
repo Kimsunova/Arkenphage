@@ -72,6 +72,7 @@ public class Player : MonoBehaviour
         }
 
 
+        DropDown();
         FlipSprite();
         Jump();
         //Attack();
@@ -94,7 +95,7 @@ public class Player : MonoBehaviour
         //Debug.Log("y velocity: " + playerRigidBody.velocity.y);
 
 
-        if (!playerFeetCollider.IsTouchingLayers(LayerMask.GetMask("Ground")))
+        if (!(playerFeetCollider.IsTouchingLayers(LayerMask.GetMask("Ground")) || playerFeetCollider.IsTouchingLayers(LayerMask.GetMask("DropThroughGround"))))
         {
             return;
         }
@@ -132,19 +133,38 @@ public class Player : MonoBehaviour
 
             bool playerIsFalling = playerRigidBody.velocity.y < -fallAnimationInitiateSpeed; //if player is moving
 
-        if (playerFeetCollider.IsTouchingLayers(LayerMask.GetMask("Ground")))
+        if (playerFeetCollider.IsTouchingLayers(LayerMask.GetMask("Ground")) || playerFeetCollider.IsTouchingLayers(LayerMask.GetMask("DropThroughGround")))
         {
             playerIsFalling = false;
         }
 
-
-
         currentState = PlayerState.falling;
         playerAnimator.SetBool("Falling", playerIsFalling);
+    }
 
+    private void DropDown()
+    {
+        if (playerFeetCollider.IsTouchingLayers(LayerMask.GetMask("DropThroughGround")))
+        {
 
+            print("on dropthrough");
+            float verticalInput = CrossPlatformInputManager.GetAxisRaw("Vertical");
 
+            if (verticalInput < 0 && CrossPlatformInputManager.GetButtonDown("Jump"))
+            {
+                StartCoroutine(DropCo());
+            }
+        }
 
+    }
+
+    private IEnumerator DropCo()
+    {
+        playerFeetCollider.enabled = false;
+        playerBodyCollider.enabled = false;
+        yield return new WaitForSeconds(.2f);
+        playerFeetCollider.enabled = true;
+        playerBodyCollider.enabled = true;
     }
 
     //private void Attack()
