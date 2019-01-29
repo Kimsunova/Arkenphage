@@ -96,7 +96,6 @@ public class GrapplingHook : MonoBehaviour
             //float angleToJoint = Vector2.SignedAngle(grappleJoint.connectedAnchor, new Vector2(this.transform.position.x, this.transform.position.y));
             //print(angleToJoint);
             float distanceBelowAnchor = this.transform.position.y - grappleJoint.connectedAnchor.y;
-            print(distanceBelowAnchor);
             if (distanceBelowAnchor < -distanceBelowJointWhereSwingingIsPermitted)//only allow momentum swinging when below anchor point
             {
                 float horizontalInput = CrossPlatformInputManager.GetAxis("Horizontal");//not raw cuz want the build up on the swing

@@ -26054,7 +26054,7 @@ Prefab:
     - target: {fileID: 20716279084256266, guid: 0bb6bdd090f59cf44a1a39d4f880092b,
         type: 2}
       propertyPath: orthographic size
-      value: 12
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 4998420694452530, guid: 0bb6bdd090f59cf44a1a39d4f880092b, type: 2}
       propertyPath: m_LocalPosition.x
@@ -26062,11 +26062,11 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4998420694452530, guid: 0bb6bdd090f59cf44a1a39d4f880092b, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 0.06
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4998420694452530, guid: 0bb6bdd090f59cf44a1a39d4f880092b, type: 2}
       propertyPath: m_LocalPosition.z
-      value: -10
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4332010959866366, guid: 0bb6bdd090f59cf44a1a39d4f880092b, type: 2}
       propertyPath: m_LocalPosition.x
@@ -26199,12 +26199,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxDistance: 15
-  timeAfterGrappleFinishesToMaintainMomentumAndPreventPlayerInput: 0.2
+  timeAfterGrappleFinishesToMaintainMomentumAndPreventPlayerInput: 0.15
   layerMaskToReceiveGrapple:
     serializedVersion: 2
     m_Bits: 33024
   ropeRenderer: {fileID: 0}
-  swingSpeed: 3
+  swingSpeed: 0.15
+  distanceBelowJointWhereSwingingIsPermitted: 5
 --- !u!120 &1203189135
 LineRenderer:
   m_ObjectHideFlags: 0
