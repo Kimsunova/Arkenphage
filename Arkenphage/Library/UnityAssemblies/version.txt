@@ -79,7 +79,6 @@ C:\Program Files\Unity_2018.2.14\Editor\Data\MonoBleedingEdge\lib\mono\unity\Sys
 C:\Program Files\Unity_2018.2.14\Editor\Data\MonoBleedingEdge\lib\mono\unity\UnityScript.dll
 C:\Program Files\Unity_2018.2.14\Editor\Data\MonoBleedingEdge\lib\mono\unity\UnityScript.Lang.dll
 C:\Program Files\Unity_2018.2.14\Editor\Data\MonoBleedingEdge\lib\mono\unity\Boo.Lang.dll
-C:\Program Files\Unity_2018.2.14\Editor\Data\Managed/UnityEngine/UnityEngine.SpatialTrackingModule.dll
 C:/Program Files/Unity_2018.2.14/Editor/Data/UnityExtensions/Unity/GUISystem/Editor/UnityEditor.UI.dll
 C:/Program Files/Unity_2018.2.14/Editor/Data/UnityExtensions/Unity/Timeline/Editor/UnityEditor.Timeline.dll
 C:/Program Files/Unity_2018.2.14/Editor/Data/UnityExtensions/Unity/TreeEditor/Editor/UnityEditor.TreeEditor.dll
@@ -94,6 +93,10 @@ C:/Users/Owner/AppData/Local/Unity/cache/packages/packages.unity.com/com.unity.a
 C:/Users/Owner/AppData/Local/Unity/cache/packages/packages.unity.com/com.unity.analytics@2.0.16/Editor/UnityEditor.Analytics.dll
 C:/Users/Owner/AppData/Local/Unity/cache/packages/packages.unity.com/com.unity.purchasing@2.0.3/Editor/UnityEditor.Purchasing.dll
 C:/Program Files (x86)/Microsoft Visual Studio Tools for Unity/15.0/Editor/SyntaxTree.VisualStudio.Unity.Bridge.dll
+C:\Program Files\Unity_2018.2.14\Editor\Data\Managed/UnityEngine/UnityEngine.SpatialTrackingModule.dll
+C:/Program Files/Unity_2018.2.14/Editor/Data/UnityExtensions/Unity/TestRunner/Editor/UnityEditor.TestRunner.dll
+C:/Program Files/Unity_2018.2.14/Editor/Data/UnityExtensions/Unity/TestRunner/UnityEngine.TestRunner.dll
+C:/Program Files/Unity_2018.2.14/Editor/Data/UnityExtensions/Unity/TestRunner/net35/unity-custom/nunit.framework.dll
 C:\Program Files\Unity_2018.2.14\Editor\Data\MonoBleedingEdge\lib\mono\2.0-api\mscorlib.dll
 C:\Program Files\Unity_2018.2.14\Editor\Data\MonoBleedingEdge\lib\mono\2.0-api\System.dll
 C:\Program Files\Unity_2018.2.14\Editor\Data\MonoBleedingEdge\lib\mono\2.0-api\System.Core.dll
