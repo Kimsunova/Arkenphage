@@ -26058,11 +26058,11 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4998420694452530, guid: 0bb6bdd090f59cf44a1a39d4f880092b, type: 2}
       propertyPath: m_LocalPosition.x
-      value: -0.00035858154
+      value: -0.0003566742
       objectReference: {fileID: 0}
     - target: {fileID: 4998420694452530, guid: 0bb6bdd090f59cf44a1a39d4f880092b, type: 2}
       propertyPath: m_LocalPosition.y
-      value: -0.08072132
+      value: -0.08019489
       objectReference: {fileID: 0}
     - target: {fileID: 4998420694452530, guid: 0bb6bdd090f59cf44a1a39d4f880092b, type: 2}
       propertyPath: m_LocalPosition.z

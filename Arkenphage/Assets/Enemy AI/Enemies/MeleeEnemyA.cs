@@ -24,9 +24,9 @@ public class MeleeEnemyA : EnemyAI {
         if (chasing)
         {
             if (playerTarget.position.x > transform.position.x)
-                rb.velocity = new Vector2(speed, rb.velocity.y);
-            else if (playerTarget.position.x < transform.position.x)
                 rb.velocity = new Vector2(-speed, rb.velocity.y);
+            else if (playerTarget.position.x < transform.position.x)
+                rb.velocity = new Vector2(speed, rb.velocity.y);
         }
     }
 

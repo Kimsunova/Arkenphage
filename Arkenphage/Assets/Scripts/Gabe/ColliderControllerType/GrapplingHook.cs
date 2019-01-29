@@ -44,11 +44,14 @@ public class GrapplingHook : MonoBehaviour
                                                                                                                                           //the same as ground, or maybe drop through ground? could be an invisible thing that just goes wherever you want to add grapple reception to a platform
             Rigidbody2D hitRb = null;
 
-
-            if (hit.collider.gameObject.GetComponent<Rigidbody2D>() != null)
+            if (hit.collider != null)
             {
-                hitRb = hit.collider.gameObject.GetComponent<Rigidbody2D>();
+                if (hit.collider.gameObject.GetComponent<Rigidbody2D>() != null)
+                {
+                    hitRb = hit.collider.gameObject.GetComponent<Rigidbody2D>();
+                }
             }
+
 
 
             if (hit.collider != null && hitRb != null)
@@ -72,6 +75,8 @@ public class GrapplingHook : MonoBehaviour
 
         if (grappleJoint.enabled)
         {
+            var a = player.currentState;
+
             ropeRenderer.enabled = true;
             ropeRenderer.positionCount = 2;
             ropeRenderer.SetPosition(0, transform.position);
@@ -98,6 +103,10 @@ public class GrapplingHook : MonoBehaviour
     private IEnumerator WaitAfterGrappleToMaintainMomentum()
     {
         yield return new WaitForSeconds(timeAfterGrappleFinishesToMaintainMomentumAndPreventPlayerInput);
-        player.currentState = PlayerState.walk;//perhaps should be idle or fall??
+
+        if (!grappleJoint.enabled) //this is needed again becuase if you immediately go back to a grapple before this coroutine is over then it sets it to grapple above and then to walk here when this coroutine is over but you are grappling again
+        {
+            player.currentState = PlayerState.walk;//perhaps should be idle or fall? 
+        }
     }
 }
