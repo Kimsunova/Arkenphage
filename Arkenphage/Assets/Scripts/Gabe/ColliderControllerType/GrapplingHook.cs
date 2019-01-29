@@ -19,6 +19,7 @@ public class GrapplingHook : MonoBehaviour
     [SerializeField] LineRenderer ropeRenderer;
     [SerializeField] float swingSpeed;
     [SerializeField] float distanceBelowJointWhereSwingingIsPermitted;
+    [SerializeField] float jumpFromGrappleStrength = 5f;
 
 
     // Use this for initialization
@@ -102,9 +103,24 @@ public class GrapplingHook : MonoBehaviour
                 player.GetComponent<Rigidbody2D>().velocity += new Vector2(horizontalInput * swingSpeed, 0);
             }
 
+
+            if (CrossPlatformInputManager.GetButtonDown("Jump"))
+            {
+                ropeRenderer.enabled = false;
+                grappleJoint.enabled = false;
+                Vector2 jumpVelocityToAdd = new Vector2(0, jumpFromGrappleStrength);
+                player.GetComponent<Rigidbody2D>().velocity += jumpVelocityToAdd;
+                //player.currentState = PlayerState.falling;
+                StartCoroutine(WaitAfterGrappleToMaintainMomentum());//should just jump straight up and off of rope with above state change, or maintain momentum from jump like below?
+                //playerAnimator.SetBool("Jumping", true);//could have a jump from rope animation later
+            }
+            
+
+            
+
         }
 
-        if (CrossPlatformInputManager.GetButtonUp("Fire2"))
+        if (CrossPlatformInputManager.GetButtonUp("Fire2") && grappleJoint.enabled)
         {
             ropeRenderer.enabled = false;
             grappleJoint.enabled = false;
