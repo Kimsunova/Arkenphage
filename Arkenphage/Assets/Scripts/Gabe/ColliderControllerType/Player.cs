@@ -143,13 +143,18 @@ public class Player : MonoBehaviour
             playerIsFalling = false;
         }
 
-        if(!(currentState == PlayerState.grappling))
+        //if(!(currentState == PlayerState.grappling))
+        //{
+        //    //currentState = PlayerState.falling;//these seems wrong, it runs always that if not grappling then falling?
+        //}
+        //else
+        //{
+        //    playerIsFalling = true;//so always on falling animation if grappling (may need to chagne all this around later ifthere is a grappling animation)
+        //}
+
+        if(currentState == PlayerState.grappling)
         {
-            currentState = PlayerState.falling;
-        }
-        else
-        {
-            playerIsFalling = true;//so always on falling animation if grappling (may need to chagne all this around later ifthere is a grappling animation)
+            playerIsFalling = true; //always on falling animation if grappling
         }
 
         playerAnimator.SetBool("Falling", playerIsFalling);

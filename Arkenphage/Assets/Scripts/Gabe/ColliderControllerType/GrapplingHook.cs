@@ -131,8 +131,8 @@ public class GrapplingHook : MonoBehaviour
             }
 
 
-            if (playerBodyCollider.IsTouchingLayers(LayerMask.GetMask("Ground")) || playerBodyCollider.IsTouchingLayers(LayerMask.GetMask("DropThroughGround")))
-            {
+            if (playerBodyCollider.IsTouchingLayers(LayerMask.GetMask("Ground")) || playerBodyCollider.IsTouchingLayers(LayerMask.GetMask("DropThroughGround")) && !isInHookshotMode)//needs to not be in hookshot mode because don't want to bounch off of platforms you are going through?
+            {//or could be not dropthrough ground or not hookshot mode, as in it just can't be both
                 var direction = 1;
 
                 if(playerRigidBody.velocity.x < 0)
@@ -181,8 +181,14 @@ public class GrapplingHook : MonoBehaviour
                 {
                     if (IsDropdownTarget)
                     {
-                        Vector2 upOverDropdownPlatformAddedVelocity = new Vector2(0, upOverDropdownPlatformJumpStrength);
-                        playerRigidBody.velocity += upOverDropdownPlatformAddedVelocity;
+                        
+
+                        Vector2 direction = grappleJoint.connectedAnchor - new Vector2(this.transform.position.x, this.transform.position.y);
+                        direction.Normalize();
+                        Vector2 addedJumpThrough = direction * upOverDropdownPlatformJumpStrength;
+                        Debug.DrawRay(this.transform.position, new Vector3(direction.x, direction.y), Color.red, 5f);
+                        playerRigidBody.velocity += addedJumpThrough;
+
                     }
                     ropeRenderer.enabled = false;
                     grappleJoint.enabled = false;
@@ -228,7 +234,7 @@ public class GrapplingHook : MonoBehaviour
 
         if (!grappleJoint.enabled) //this is needed again becuase if you immediately go back to a grapple before this coroutine is over then it sets it to grapple above and then to walk here when this coroutine is over but you are grappling again
         {
-            player.currentState = PlayerState.walk;//perhaps should be idle or fall? 
+            player.currentState = PlayerState.falling;//perhaps should be idle or walk? 
         }
     }
 }
