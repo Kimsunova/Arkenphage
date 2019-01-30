@@ -26710,11 +26710,11 @@ Prefab:
     m_Modifications:
     - target: {fileID: 4088419974293308, guid: e9c15e5234614b541ae19211c9b55d78, type: 2}
       propertyPath: m_LocalPosition.x
-      value: 26.87
+      value: 14.99
       objectReference: {fileID: 0}
     - target: {fileID: 4088419974293308, guid: e9c15e5234614b541ae19211c9b55d78, type: 2}
       propertyPath: m_LocalPosition.y
-      value: -3.4
+      value: 11.6
       objectReference: {fileID: 0}
     - target: {fileID: 4088419974293308, guid: e9c15e5234614b541ae19211c9b55d78, type: 2}
       propertyPath: m_LocalPosition.z
@@ -26904,7 +26904,7 @@ MonoBehaviour:
   deathTime: 2
   myAnimator: {fileID: 0}
   target: {fileID: 0}
-  chaseRadius: 10
+  chaseRadius: 13
   attackRadius: 1
   homePosition: {fileID: 0}
 --- !u!50 &1593433976
@@ -27007,7 +27007,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1619205568
 Transform:
   m_ObjectHideFlags: 0
