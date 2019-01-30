@@ -26280,7 +26280,7 @@ Prefab:
     - target: {fileID: 114195097671532498, guid: 143ad6a4c851b0a4f96645ec533e100a,
         type: 2}
       propertyPath: upOverDropdownPlatformJumpStrength
-      value: 22
+      value: 25
       objectReference: {fileID: 0}
     - target: {fileID: 114195097671532498, guid: 143ad6a4c851b0a4f96645ec533e100a,
         type: 2}
