@@ -24,8 +24,13 @@ public class GrapplingHook : MonoBehaviour
     [SerializeField] float hookShotRetractionSpeed = 25f;
     [SerializeField] float distanceToHookShotDisconnect = 1f;
 
+    [SerializeField] float upOverDropdownPlatformJumpStrength = 30f;
+
+
 
     [SerializeField] bool isInHookshotMode = false;
+
+    private bool IsDropdownTarget = false;
 
 
     // Use this for initialization
@@ -44,6 +49,8 @@ public class GrapplingHook : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
+
 
         if (Input.GetKeyDown(KeyCode.E))//not cross platform compatible
         {
@@ -70,6 +77,17 @@ public class GrapplingHook : MonoBehaviour
 
             if (hit.collider != null && hitRb != null)
             {
+                var exponent = hit.collider.gameObject.layer;
+                var comparisonNumber = Mathf.Pow(2, exponent);
+
+                if (comparisonNumber == LayerMask.GetMask("DropThroughGround"))
+                {
+                    IsDropdownTarget = true;
+                }
+                else
+                {
+                    IsDropdownTarget = false;
+                }
 
                 var distanceToSubtract = 0f;
 
@@ -126,9 +144,16 @@ public class GrapplingHook : MonoBehaviour
                 }
                 else
                 {
+                    if (IsDropdownTarget)
+                    {
+                        Vector2 upOverDropdownPlatformAddedVelocity = new Vector2(0, upOverDropdownPlatformJumpStrength);
+                        player.GetComponent<Rigidbody2D>().velocity += upOverDropdownPlatformAddedVelocity;
+                    }
                     ropeRenderer.enabled = false;
                     grappleJoint.enabled = false;
-                    player.currentState = PlayerState.falling;
+
+
+                    StartCoroutine(WaitAfterGrappleToMaintainMomentum());
                 }
             }
 
