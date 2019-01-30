@@ -26282,6 +26282,11 @@ Prefab:
       propertyPath: upOverDropdownPlatformJumpStrength
       value: 22
       objectReference: {fileID: 0}
+    - target: {fileID: 114195097671532498, guid: 143ad6a4c851b0a4f96645ec533e100a,
+        type: 2}
+      propertyPath: slipperyFeet
+      value: 
+      objectReference: {fileID: 6200000, guid: 4a01c1fc87b697445b6e60fb2f3e805b, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 143ad6a4c851b0a4f96645ec533e100a, type: 2}
   m_IsPrefabAsset: 0
@@ -26853,7 +26858,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1593433973
 Transform:
   m_ObjectHideFlags: 0

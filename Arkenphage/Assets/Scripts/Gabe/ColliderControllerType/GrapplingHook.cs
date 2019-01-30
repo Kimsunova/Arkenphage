@@ -13,6 +13,8 @@ public class GrapplingHook : MonoBehaviour
     //GameObject playerObject;
     Player player;
     CircleCollider2D playerFeetCollider;
+    CapsuleCollider2D playerBodyCollider;
+
     [SerializeField] private float timeAfterGrappleFinishesToMaintainMomentumAndPreventPlayerInput = .2f;
     [SerializeField] LayerMask layerMaskToReceiveGrapple;
 
@@ -25,12 +27,15 @@ public class GrapplingHook : MonoBehaviour
     [SerializeField] float distanceToHookShotDisconnect = 1f;
 
     [SerializeField] float upOverDropdownPlatformJumpStrength = 30f;
+    [SerializeField] PhysicsMaterial2D slipperyFeet;
 
-
+    [SerializeField] float speedBounceOffWall = 3f;
 
     [SerializeField] bool isInHookshotMode = false;
 
     private bool IsDropdownTarget = false;
+
+    Rigidbody2D playerRigidBody;
 
 
     // Use this for initialization
@@ -40,9 +45,13 @@ public class GrapplingHook : MonoBehaviour
         grappleJoint.enabled = false;
         player = GetComponent<Player>();
         playerFeetCollider = GetComponent<CircleCollider2D>();
+        playerBodyCollider = GetComponent<CapsuleCollider2D>();
+
 
         ropeRenderer = GetComponent<LineRenderer>();
         ropeRenderer.enabled = false;
+
+        playerRigidBody = player.GetComponent<Rigidbody2D>();
 
     }
 
@@ -109,6 +118,32 @@ public class GrapplingHook : MonoBehaviour
         {
             var a = player.currentState;
 
+            playerFeetCollider.sharedMaterial = slipperyFeet;
+
+            if (playerFeetCollider.IsTouchingLayers(LayerMask.GetMask("Ground")) || playerFeetCollider.IsTouchingLayers(LayerMask.GetMask("DropThroughGround")))
+            {
+                grappleJoint.distance -= Time.deltaTime * 30f;
+                playerRigidBody.gravityScale = -5;
+            }
+            else
+            {
+                playerRigidBody.gravityScale = 1;
+            }
+
+
+            if (playerBodyCollider.IsTouchingLayers(LayerMask.GetMask("Ground")) || playerBodyCollider.IsTouchingLayers(LayerMask.GetMask("DropThroughGround")))
+            {
+                var direction = 1;
+
+                if(playerRigidBody.velocity.x < 0)
+                {
+                    direction = -1;
+                }
+
+                playerRigidBody.velocity += new Vector2(direction * speedBounceOffWall, 0);
+            }
+
+
             ropeRenderer.enabled = true;
             ropeRenderer.positionCount = 2;
             ropeRenderer.SetPosition(0, transform.position);
@@ -133,7 +168,7 @@ public class GrapplingHook : MonoBehaviour
                 if (distanceBelowAnchor < -distanceBelowJointWhereSwingingIsPermitted)//only allow momentum swinging when below anchor point
                 {
                     float horizontalInput = CrossPlatformInputManager.GetAxis("Horizontal");//not raw cuz want the build up on the swing
-                    player.GetComponent<Rigidbody2D>().velocity += new Vector2(horizontalInput * swingSpeed, 0);
+                    playerRigidBody.velocity += new Vector2(horizontalInput * swingSpeed, 0);
                 }
             }
             else
@@ -147,11 +182,12 @@ public class GrapplingHook : MonoBehaviour
                     if (IsDropdownTarget)
                     {
                         Vector2 upOverDropdownPlatformAddedVelocity = new Vector2(0, upOverDropdownPlatformJumpStrength);
-                        player.GetComponent<Rigidbody2D>().velocity += upOverDropdownPlatformAddedVelocity;
+                        playerRigidBody.velocity += upOverDropdownPlatformAddedVelocity;
                     }
                     ropeRenderer.enabled = false;
                     grappleJoint.enabled = false;
-
+                    playerFeetCollider.sharedMaterial = null;
+                    playerRigidBody.gravityScale = 1;
 
                     StartCoroutine(WaitAfterGrappleToMaintainMomentum());
                 }
@@ -160,10 +196,12 @@ public class GrapplingHook : MonoBehaviour
 
             if (CrossPlatformInputManager.GetButtonDown("Jump"))
             {
+                playerFeetCollider.sharedMaterial = null;
                 ropeRenderer.enabled = false;
                 grappleJoint.enabled = false;
+                playerRigidBody.gravityScale = 1;
                 Vector2 jumpVelocityToAdd = new Vector2(0, jumpFromGrappleStrength);
-                player.GetComponent<Rigidbody2D>().velocity += jumpVelocityToAdd;
+                playerRigidBody.velocity += jumpVelocityToAdd;
                 //player.currentState = PlayerState.falling;
                 StartCoroutine(WaitAfterGrappleToMaintainMomentum());//should just jump straight up and off of rope with above state change, or maintain momentum from jump like below?
                 //playerAnimator.SetBool("Jumping", true);//could have a jump from rope animation later
@@ -176,8 +214,10 @@ public class GrapplingHook : MonoBehaviour
 
         if (CrossPlatformInputManager.GetButtonUp("Fire2") && grappleJoint.enabled)
         {
+            playerFeetCollider.sharedMaterial = null;
             ropeRenderer.enabled = false;
             grappleJoint.enabled = false;
+            playerRigidBody.gravityScale = 1;
             StartCoroutine(WaitAfterGrappleToMaintainMomentum());
         }
     }
