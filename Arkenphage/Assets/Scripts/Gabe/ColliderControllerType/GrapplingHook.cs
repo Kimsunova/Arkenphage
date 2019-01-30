@@ -21,6 +21,12 @@ public class GrapplingHook : MonoBehaviour
     [SerializeField] float distanceBelowJointWhereSwingingIsPermitted;
     [SerializeField] float jumpFromGrappleStrength = 5f;
 
+    [SerializeField] float hookShotRetractionSpeed = 25f;
+    [SerializeField] float distanceToHookShotDisconnect = 1f;
+
+
+    [SerializeField] bool isInHookshotMode = false;
+
 
     // Use this for initialization
     void Start()
@@ -38,6 +44,11 @@ public class GrapplingHook : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
+        if (Input.GetKeyDown(KeyCode.E))//not cross platform compatible
+        {
+            isInHookshotMode = !isInHookshotMode;
+        }
 
         if (CrossPlatformInputManager.GetButtonDown("Fire2"))
         {
@@ -85,22 +96,40 @@ public class GrapplingHook : MonoBehaviour
             ropeRenderer.SetPosition(0, transform.position);
             ropeRenderer.SetPosition(1, new Vector3(grappleJoint.connectedAnchor.x, grappleJoint.connectedAnchor.y, 0));
 
-            if (CrossPlatformInputManager.GetAxisRaw("Vertical") > 0)
-            {
-                grappleJoint.distance -= Time.deltaTime * 5f;
-            }
-            if (CrossPlatformInputManager.GetAxisRaw("Vertical") < 0)
-            {
-                grappleJoint.distance += Time.deltaTime * 5f;
-            }
 
-            //float angleToJoint = Vector2.SignedAngle(grappleJoint.connectedAnchor, new Vector2(this.transform.position.x, this.transform.position.y));
-            //print(angleToJoint);
-            float distanceBelowAnchor = this.transform.position.y - grappleJoint.connectedAnchor.y;
-            if (distanceBelowAnchor < -distanceBelowJointWhereSwingingIsPermitted)//only allow momentum swinging when below anchor point
+            if (!isInHookshotMode)
             {
-                float horizontalInput = CrossPlatformInputManager.GetAxis("Horizontal");//not raw cuz want the build up on the swing
-                player.GetComponent<Rigidbody2D>().velocity += new Vector2(horizontalInput * swingSpeed, 0);
+                if (CrossPlatformInputManager.GetAxisRaw("Vertical") > 0)
+                {
+                    grappleJoint.distance -= Time.deltaTime * 5f;
+                }
+                if (CrossPlatformInputManager.GetAxisRaw("Vertical") < 0)
+                {
+                    grappleJoint.distance += Time.deltaTime * 5f;
+                }
+
+
+                //float angleToJoint = Vector2.SignedAngle(grappleJoint.connectedAnchor, new Vector2(this.transform.position.x, this.transform.position.y));
+                //print(angleToJoint);
+                float distanceBelowAnchor = this.transform.position.y - grappleJoint.connectedAnchor.y;
+                if (distanceBelowAnchor < -distanceBelowJointWhereSwingingIsPermitted)//only allow momentum swinging when below anchor point
+                {
+                    float horizontalInput = CrossPlatformInputManager.GetAxis("Horizontal");//not raw cuz want the build up on the swing
+                    player.GetComponent<Rigidbody2D>().velocity += new Vector2(horizontalInput * swingSpeed, 0);
+                }
+            }
+            else
+            {
+                if (grappleJoint.distance > distanceToHookShotDisconnect)
+                {
+                    grappleJoint.distance -= Time.deltaTime * hookShotRetractionSpeed;
+                }
+                else
+                {
+                    ropeRenderer.enabled = false;
+                    grappleJoint.enabled = false;
+                    player.currentState = PlayerState.falling;
+                }
             }
 
 
@@ -114,9 +143,9 @@ public class GrapplingHook : MonoBehaviour
                 StartCoroutine(WaitAfterGrappleToMaintainMomentum());//should just jump straight up and off of rope with above state change, or maintain momentum from jump like below?
                 //playerAnimator.SetBool("Jumping", true);//could have a jump from rope animation later
             }
-            
 
-            
+
+
 
         }
 

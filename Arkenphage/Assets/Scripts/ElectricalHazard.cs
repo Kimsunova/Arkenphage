@@ -6,7 +6,6 @@ public class ElectricalHazard : MonoBehaviour {
 
 
     private ParticleSystem electricity;
-    private ParticleSystem.MainModule electricMain;
     private BoxCollider2D thisCollider;
     [SerializeField] private float interval = 5f;
     private bool isActive = true;
@@ -19,13 +18,14 @@ public class ElectricalHazard : MonoBehaviour {
 	void Start () {
         electricity = GetComponentInChildren<ParticleSystem>();
         thisCollider = GetComponent<BoxCollider2D>();
-        electricMain = electricity.main;
     }
 	
 	// Update is called once per frame
 	void Update () {
 
-        electricMain.startLifetime = electricityLifeTime;
+
+        var main = electricity.main;
+        main.startLifetime = electricityLifeTime;
 
         thisCollider.size = new Vector2(boxColliderSize, thisCollider.size.y);
         thisCollider.offset = new Vector2(boxColliderSize / 2, thisCollider.offset.y);
