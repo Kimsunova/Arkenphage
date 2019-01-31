@@ -45,7 +45,8 @@ public class Player : MonoBehaviour
     CircleCollider2D playerFeetCollider;
     PolygonCollider2D attackHitBox;
 
-
+    //External variables
+    public Interactable interactFocus;
 
 
 
@@ -76,6 +77,11 @@ public class Player : MonoBehaviour
         {
             //UpdateAnimationAndMove();
             Run();
+        }
+
+        if (Input.GetKeyDown(KeyCode.P) && interactFocus != null)
+        {
+            interactFocus.Interact();
         }
 
 
@@ -314,6 +320,24 @@ public class Player : MonoBehaviour
 
             currentState = PlayerState.idle;//set back to idel after being knocked (was set to stagger before getting in here)
             playerRigidBody.velocity = Vector2.zero;
+        }
+    }
+
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == "Interactable" && interactFocus == null)
+        {
+            interactFocus = collision.gameObject.GetComponent<Interactable>();
+            interactFocus.OnFocused();
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == "Interactable" && interactFocus != null)
+        {
+            interactFocus.OnDefocused();
+            interactFocus = null;
         }
     }
 }
