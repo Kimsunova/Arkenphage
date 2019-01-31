@@ -192,7 +192,7 @@ public class GrapplingHook : MonoBehaviour
                     playerFeetCollider.sharedMaterial = null;
                     playerRigidBody.gravityScale = 1;
 
-                    StartCoroutine(WaitAfterGrappleToMaintainMomentum());
+                    StartCoroutine(WaitAfterGrappleToMaintainMomentum(isInHookshotMode));
                 }
             }
 
@@ -206,7 +206,7 @@ public class GrapplingHook : MonoBehaviour
                 Vector2 jumpVelocityToAdd = new Vector2(0, jumpFromGrappleStrength);
                 playerRigidBody.velocity += jumpVelocityToAdd;
                 //player.currentState = PlayerState.falling;
-                StartCoroutine(WaitAfterGrappleToMaintainMomentum());//should just jump straight up and off of rope with above state change, or maintain momentum from jump like below?
+                StartCoroutine(WaitAfterGrappleToMaintainMomentum(isInHookshotMode));//should just jump straight up and off of rope with above state change, or maintain momentum from jump like below?
                 //playerAnimator.SetBool("Jumping", true);//could have a jump from rope animation later
             }
 
@@ -228,13 +228,20 @@ public class GrapplingHook : MonoBehaviour
             ropeRenderer.enabled = false;
             grappleJoint.enabled = false;
             playerRigidBody.gravityScale = 1;
-            StartCoroutine(WaitAfterGrappleToMaintainMomentum());
+            StartCoroutine(WaitAfterGrappleToMaintainMomentum(isInHookshotMode));
         }
     }
 
-    private IEnumerator WaitAfterGrappleToMaintainMomentum()
+    private IEnumerator WaitAfterGrappleToMaintainMomentum(bool isInHookShotMode)
     {
-        yield return new WaitForSeconds(timeAfterGrappleFinishesToMaintainMomentumAndPreventPlayerInput);
+
+        var waitTime = timeAfterGrappleFinishesToMaintainMomentumAndPreventPlayerInput;
+        if (isInHookshotMode)
+        {
+            waitTime = .15f;//if in hook shot need control right after disconnnect more likely, rather than needing momentum right after disconnect
+        }
+
+        yield return new WaitForSeconds(waitTime);
 
         if (!grappleJoint.enabled) //this is needed again becuase if you immediately go back to a grapple before this coroutine is over then it sets it to grapple above and then to walk here when this coroutine is over but you are grappling again
         {

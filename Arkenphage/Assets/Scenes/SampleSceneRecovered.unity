@@ -129608,19 +129608,19 @@ Prefab:
     - target: {fileID: 20716279084256266, guid: 0bb6bdd090f59cf44a1a39d4f880092b,
         type: 2}
       propertyPath: orthographic size
-      value: 12
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 4998420694452530, guid: 0bb6bdd090f59cf44a1a39d4f880092b, type: 2}
       propertyPath: m_LocalPosition.x
-      value: 31.29
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4998420694452530, guid: 0bb6bdd090f59cf44a1a39d4f880092b, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 5.6
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4998420694452530, guid: 0bb6bdd090f59cf44a1a39d4f880092b, type: 2}
       propertyPath: m_LocalPosition.z
-      value: -10
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4332010959866366, guid: 0bb6bdd090f59cf44a1a39d4f880092b, type: 2}
       propertyPath: m_LocalPosition.x
@@ -129719,6 +129719,11 @@ Prefab:
     - target: {fileID: 4572038479453352, guid: 143ad6a4c851b0a4f96645ec533e100a, type: 2}
       propertyPath: m_RootOrder
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114195097671532498, guid: 143ad6a4c851b0a4f96645ec533e100a,
+        type: 2}
+      propertyPath: timeAfterGrappleFinishesToMaintainMomentumAndPreventPlayerInput
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 143ad6a4c851b0a4f96645ec533e100a, type: 2}
