@@ -24,6 +24,8 @@ public class Player : MonoBehaviour
     [SerializeField] float runSpeed = 5f;
     [SerializeField] float jumpStrength = 5f;
     [SerializeField] float fallAnimationInitiateSpeed = 5f;
+    [SerializeField] float fallMoveSpeed = 5f;
+
 
 
     //Player State
@@ -70,7 +72,7 @@ public class Player : MonoBehaviour
         {
             StartCoroutine(AttackCo());
         }
-        else if (currentState == PlayerState.walk || currentState == PlayerState.idle && currentState != PlayerState.falling && currentState != PlayerState.grappling)//need falling? should be able to move while falling?
+        else if (currentState == PlayerState.walk || currentState == PlayerState.idle || currentState == PlayerState.falling)//need falling? should be able to move while falling?
         {
             //UpdateAnimationAndMove();
             Run();
@@ -139,11 +141,11 @@ public class Player : MonoBehaviour
         }
 
 
-        bool playerIsFalling = playerRigidBody.velocity.y < -fallAnimationInitiateSpeed; //if player is moving
+        bool playFallingAnimation = playerRigidBody.velocity.y < -fallAnimationInitiateSpeed; //if player is moving
 
         if (playerFeetCollider.IsTouchingLayers(LayerMask.GetMask("Ground")) || playerFeetCollider.IsTouchingLayers(LayerMask.GetMask("DropThroughGround")))
         {
-            playerIsFalling = false;
+            playFallingAnimation = false;
             //currentState = PlayerState.idle;//do this if also grappling hook is disabled
         }
 
@@ -158,10 +160,20 @@ public class Player : MonoBehaviour
 
         if(currentState == PlayerState.grappling)
         {
-            playerIsFalling = true; //always on falling animation if grappling
+            playFallingAnimation = true; //always on falling animation if grappling
+        }
+        else
+        {
+            currentState = PlayerState.falling;
         }
 
-        playerAnimator.SetBool("Falling", playerIsFalling);
+        //if(currentState == PlayerState.falling)
+        //{
+        //    float horizontalInput = CrossPlatformInputManager.GetAxisRaw("Horizontal");
+        //    playerRigidBody.velocity += new Vector2(horizontalInput * fallMoveSpeed, 0f);
+        //}
+
+        playerAnimator.SetBool("Falling", playFallingAnimation);
     }
 
     private void DropDown()
