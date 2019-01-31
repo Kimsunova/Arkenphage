@@ -70,11 +70,14 @@ public class Player : MonoBehaviour
         {
             StartCoroutine(AttackCo());
         }
-        else if (currentState == PlayerState.walk || currentState == PlayerState.idle || currentState == PlayerState.falling && currentState != PlayerState.grappling)//need falling? should be able to move while falling?
+        else if (currentState == PlayerState.walk || currentState == PlayerState.idle && currentState != PlayerState.falling && currentState != PlayerState.grappling)//need falling? should be able to move while falling?
         {
             //UpdateAnimationAndMove();
             Run();
         }
+
+
+
 
 
         DropDown();
@@ -141,6 +144,7 @@ public class Player : MonoBehaviour
         if (playerFeetCollider.IsTouchingLayers(LayerMask.GetMask("Ground")) || playerFeetCollider.IsTouchingLayers(LayerMask.GetMask("DropThroughGround")))
         {
             playerIsFalling = false;
+            //currentState = PlayerState.idle;//do this if also grappling hook is disabled
         }
 
         //if(!(currentState == PlayerState.grappling))
@@ -179,7 +183,7 @@ public class Player : MonoBehaviour
     {
         playerFeetCollider.enabled = false;
         playerBodyCollider.enabled = false;
-        yield return new WaitForSeconds(.2f);
+        yield return new WaitForSeconds(.3f);
         playerFeetCollider.enabled = true;
         playerBodyCollider.enabled = true;
     }

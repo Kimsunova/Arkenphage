@@ -181,12 +181,9 @@ public class GrapplingHook : MonoBehaviour
                 {
                     if (IsDropdownTarget)
                     {
-                        
-
                         Vector2 direction = grappleJoint.connectedAnchor - new Vector2(this.transform.position.x, this.transform.position.y);
                         direction.Normalize();
                         Vector2 addedJumpThrough = direction * upOverDropdownPlatformJumpStrength;
-                        Debug.DrawRay(this.transform.position, new Vector3(direction.x, direction.y), Color.red, 5f);
                         playerRigidBody.velocity += addedJumpThrough;
 
                     }
@@ -216,6 +213,13 @@ public class GrapplingHook : MonoBehaviour
 
 
 
+        }
+        else
+        {
+            if (playerFeetCollider.IsTouchingLayers(LayerMask.GetMask("Ground")) || playerFeetCollider.IsTouchingLayers(LayerMask.GetMask("DropThroughGround")))
+            {
+                player.currentState = PlayerState.idle;//this is to stop falling once you have disabled the rope and hit the ground
+            }
         }
 
         if (CrossPlatformInputManager.GetButtonUp("Fire2") && grappleJoint.enabled)
