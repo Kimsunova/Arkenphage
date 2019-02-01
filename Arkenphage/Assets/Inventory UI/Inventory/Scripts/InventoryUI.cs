@@ -19,9 +19,11 @@ public class InventoryUI : MonoBehaviour {
     // Use this for initialization
     void Start () {
         inventory = Inventory.instance;
+        //inventory.onItemChangedCallback += UpdateUI;
+
         slots = itemsParent.GetComponentsInChildren<InventorySlot>();
+
         groupCount = System.Enum.GetNames(typeof(Item.Type)).Length;
-        inventoryUI.SetActive(false);
 
         for (int i = 0; i < groupCount; i++)
         {
