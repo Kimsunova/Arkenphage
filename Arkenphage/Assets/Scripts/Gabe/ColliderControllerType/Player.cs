@@ -34,6 +34,7 @@ public class Player : MonoBehaviour
     public FloatValue currentHealth;
     public Signal playerHealthSignal;
     public Signal playerHit;
+    private bool IsDead = false;
 
     //public bool IsGrappling { get; set; }//should i use these properties like this?
 
@@ -60,12 +61,9 @@ public class Player : MonoBehaviour
 
     }
 
-    void Update()
+    private void FixedUpdate()
     {
-        if (currentState == PlayerState.interact || currentState == PlayerState.dead || currentState == PlayerState.stagger)
-        {
-            return;//this isn't working and player can still move around when state is dead
-        }
+        
 
         //new
         if (CrossPlatformInputManager.GetButtonDown("Fire1") && currentState != PlayerState.attack && currentState != PlayerState.stagger)
@@ -77,13 +75,28 @@ public class Player : MonoBehaviour
             //UpdateAnimationAndMove();
             Run();
         }
+    }
+
+    void Update()
+    {
+
+        if (currentState == PlayerState.interact || currentState == PlayerState.dead || currentState == PlayerState.stagger || IsDead)
+        {
+            return;//this isn't working and player can still move around when state is dead
+        }
+
+       
 
 
 
 
 
         DropDown();
-        FlipSprite();
+
+
+        FlipSprite();//flipsprite is interfereing with the new rope system script test so just commenting out temporarily
+
+
         Jump();
         //Attack();
         Falling();//this still triggers when dead?, like if you die when in the falling animation (see falling into spike pit)
@@ -220,7 +233,7 @@ public class Player : MonoBehaviour
 
     private void FlipSprite()
     {
-        if (currentState == PlayerState.stagger || currentState == PlayerState.dead)
+        if (currentState == PlayerState.stagger || currentState == PlayerState.dead || currentState == PlayerState.grappling)//added grappling for compatibility with new ope system
             return;//so player doesn't turn around when staggered or killed
 
         bool playerHasHorizontalSpeed = Mathf.Abs(playerRigidBody.velocity.x) > Mathf.Epsilon; //if player is moving because epsilon is the smallest float
@@ -299,6 +312,7 @@ public class Player : MonoBehaviour
         playerAnimator.SetBool("Falling", false);
         playerAnimator.SetBool("IsDead", true);//why will this not play from falling?
         currentState = PlayerState.dead;//i want to be able to set player state to dead here but it will prevent the death animation from happening sometimes, like maybe when falling?
+        IsDead = true;
         //Destroy(this.gameObject, 3f);
         yield return new WaitForSeconds(3f);
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);//should create separate methods or even classes for scenemanagement later once that is worked out, right now just reloads on player death for debugging

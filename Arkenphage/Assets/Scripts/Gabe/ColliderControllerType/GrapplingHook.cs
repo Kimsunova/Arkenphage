@@ -203,8 +203,17 @@ public class GrapplingHook : MonoBehaviour
                 ropeRenderer.enabled = false;
                 grappleJoint.enabled = false;
                 playerRigidBody.gravityScale = 1;
-                Vector2 jumpVelocityToAdd = new Vector2(0, jumpFromGrappleStrength);
-                playerRigidBody.velocity += jumpVelocityToAdd;
+
+                //add jump if jump off, although should be in direction of travel rather than straight up?
+                //Vector2 jumpVelocityToAdd = new Vector2(0, jumpFromGrappleStrength);
+                //playerRigidBody.velocity += jumpVelocityToAdd;
+                //so could instead be:
+                Vector2 direction = grappleJoint.connectedAnchor - new Vector2(this.transform.position.x, this.transform.position.y);
+                direction.Normalize();
+                Vector2 jumpOffGrappleVelocity = direction * jumpFromGrappleStrength;//should I add something extra to the y direction here?
+                playerRigidBody.velocity += jumpOffGrappleVelocity;
+                //end alternative jump
+
                 //player.currentState = PlayerState.falling;
                 StartCoroutine(WaitAfterGrappleToMaintainMomentum(isInHookshotMode));//should just jump straight up and off of rope with above state change, or maintain momentum from jump like below?
                 //playerAnimator.SetBool("Jumping", true);//could have a jump from rope animation later
