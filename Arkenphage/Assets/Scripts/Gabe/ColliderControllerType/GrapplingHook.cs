@@ -210,6 +210,10 @@ public class GrapplingHook : MonoBehaviour
                 //so could instead be:
                 Vector2 direction = grappleJoint.connectedAnchor - new Vector2(this.transform.position.x, this.transform.position.y);
                 direction.Normalize();
+                if (direction.y < 0)
+                {
+                    direction.y = -direction.y;
+                }
                 Vector2 jumpOffGrappleVelocity = direction * jumpFromGrappleStrength;//should I add something extra to the y direction here?
                 playerRigidBody.velocity += jumpOffGrappleVelocity;
                 //end alternative jump

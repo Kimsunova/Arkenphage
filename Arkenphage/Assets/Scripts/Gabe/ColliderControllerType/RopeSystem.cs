@@ -5,7 +5,8 @@ using UnityStandardAssets.CrossPlatformInput;
 using System.Linq;
 
 
-public class RopeSystem : MonoBehaviour {
+public class RopeSystem : MonoBehaviour
+{
 
     // 1
     public GameObject ropeHingeAnchor;
@@ -24,6 +25,9 @@ public class RopeSystem : MonoBehaviour {
     private List<Vector2> ropePositions = new List<Vector2>();
     private bool distanceSet;
     private Dictionary<Vector2, int> wrapPointsLookup = new Dictionary<Vector2, int>();
+    //below would be in player movement
+    public Vector2 ropeHook;
+    public float swingForce = 4f;
 
 
 
@@ -34,6 +38,34 @@ public class RopeSystem : MonoBehaviour {
         playerPosition = transform.position;
         ropeHingeAnchorRb = ropeHingeAnchor.GetComponent<Rigidbody2D>();
         ropeHingeAnchorSprite = ropeHingeAnchor.GetComponent<SpriteRenderer>();
+    }
+
+    private void FixedUpdate()//would notmally go on player 
+    {
+        if (CrossPlatformInputManager.GetAxisRaw("Horizontal") != 0 && player.currentState == PlayerState.grappling)
+        {
+            var playerToHookDirection = (ropeHook - (Vector2)transform.position).normalized;
+
+            // 2 - Inverse the direction to get a perpendicular direction
+            Vector2 perpendicularDirection;
+            if (CrossPlatformInputManager.GetAxisRaw("Horizontal") < 0)
+            {
+                perpendicularDirection = new Vector2(-playerToHookDirection.y, playerToHookDirection.x);
+                var leftPerpPos = (Vector2)transform.position - perpendicularDirection * -2f;
+                Debug.DrawLine(transform.position, leftPerpPos, Color.green, 0f);
+            }
+            else
+            {
+                perpendicularDirection = new Vector2(playerToHookDirection.y, -playerToHookDirection.x);
+                var rightPerpPos = (Vector2)transform.position + perpendicularDirection * 2f;
+                Debug.DrawLine(transform.position, rightPerpPos, Color.green, 0f);
+            }
+
+            var force = perpendicularDirection * swingForce;
+            player.GetComponent<Rigidbody2D>().AddForce(force, ForceMode2D.Force);
+
+        }
+
     }
 
     void Update()
@@ -91,6 +123,10 @@ public class RopeSystem : MonoBehaviour {
                         distanceSet = false;
                     }
                 }
+
+
+
+
             }
 
         }
@@ -254,6 +290,7 @@ public class RopeSystem : MonoBehaviour {
     private Vector2 GetClosestColliderPointFromRaycastHit(RaycastHit2D hit, PolygonCollider2D polyCollider)//original, maybe will work with foreground compoosite collider > geo type > polygons?
     //private Vector2 GetClosestColliderPointFromRaycastHit(RaycastHit2D hit, CompositeCollider2D polyCollider)
     {
+        //var test = polyCollider.GetContacts().
         // 2
         var distanceDictionary = polyCollider.points.ToDictionary<Vector2, float, Vector2>(
             position => Vector2.Distance(hit.point, polyCollider.transform.TransformPoint(position)),
