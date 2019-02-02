@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 public class Interactable : MonoBehaviour {
 
-    public bool isFocus = false;
+    [HideInInspector] public bool isFocus = false;
     Text pickupText;
 
     private void Awake()

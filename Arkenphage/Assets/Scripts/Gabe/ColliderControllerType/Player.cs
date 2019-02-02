@@ -4,17 +4,17 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityStandardAssets.CrossPlatformInput;
 
-public enum PlayerState
-{
-    walk,
-    attack,
-    interact,
-    stagger,
-    idle,
-    dead,
-    falling,
-    grappling
-}
+//public enum PlayerState
+//{
+//    walk,
+//    attack,
+//    interact,
+//    stagger,
+//    idle,
+//    dead,
+//    falling,
+//    grappling
+//}
 
 [RequireComponent(typeof(Rigidbody2D), typeof(Animator), typeof(Collider2D))]
 public class Player : MonoBehaviour
@@ -29,12 +29,22 @@ public class Player : MonoBehaviour
 
 
     //Player State
-    bool jump = false;
-    public PlayerState currentState;
+    //public PlayerState currentState;
     public FloatValue currentHealth;
     public Signal playerHealthSignal;
     public Signal playerHit;
-    private bool IsDead = false;
+
+
+
+    public bool jump = false;
+    public bool IsDead = false;
+    public bool IsGrappling = false;
+    public bool IsMoving = false;
+    public bool IsFalling = false;
+    //bool IsIdle = false;
+    public bool IsAttacking = false;
+    public bool IsStaggered = false;
+    public bool IsInteracting = false;
 
     //public bool IsGrappling { get; set; }//should i use these properties like this?
 
@@ -46,7 +56,7 @@ public class Player : MonoBehaviour
     CircleCollider2D playerFeetCollider;
     PolygonCollider2D attackHitBox;
 
-
+    public Interactable interactFocus;
 
 
 
@@ -56,7 +66,8 @@ public class Player : MonoBehaviour
         playerAnimator = GetComponent<Animator>();
         playerBodyCollider = GetComponent<CapsuleCollider2D>();
         playerFeetCollider = GetComponent<CircleCollider2D>();
-        currentState = PlayerState.walk;
+        //currentState = PlayerState.walk;
+        //IsIdle = true;
         attackHitBox = GetComponentInChildren<PolygonCollider2D>();
 
     }
@@ -66,11 +77,11 @@ public class Player : MonoBehaviour
         
 
         //new
-        if (CrossPlatformInputManager.GetButtonDown("Fire1") && currentState != PlayerState.attack && currentState != PlayerState.stagger)
+        if (CrossPlatformInputManager.GetButtonDown("Fire1") && !IsAttacking && !IsStaggered)
         {
             StartCoroutine(AttackCo());
         }
-        else if (currentState == PlayerState.walk || currentState == PlayerState.idle || currentState == PlayerState.falling)//need falling? should be able to move while falling?
+        else if (!IsDead && !IsGrappling && !IsStaggered)//need falling? should be able to move while falling?
         {
             //UpdateAnimationAndMove();
             Run();
@@ -80,15 +91,15 @@ public class Player : MonoBehaviour
     void Update()
     {
 
-        if (currentState == PlayerState.interact || currentState == PlayerState.dead || currentState == PlayerState.stagger || IsDead)
+        if (IsInteracting || IsDead || IsStaggered)
         {
             return;//this isn't working and player can still move around when state is dead
         }
 
-       
-
-
-
+        if (Input.GetKeyDown(KeyCode.P) && interactFocus != null)
+        {
+            interactFocus.Interact();
+        }
 
 
         DropDown();
@@ -110,6 +121,16 @@ public class Player : MonoBehaviour
         playerRigidBody.velocity = new Vector2(horizontalInput * runSpeed, playerRigidBody.velocity.y);
 
         bool playerHasHorizontalSpeed = Mathf.Abs(playerRigidBody.velocity.x) > Mathf.Epsilon; //if player is moving
+
+        if (playerHasHorizontalSpeed)
+        {
+            IsMoving = true;
+        }
+        else
+        {
+            IsMoving = false;
+        }
+
         playerAnimator.SetBool("Running", playerHasHorizontalSpeed);
     }
 
@@ -147,38 +168,24 @@ public class Player : MonoBehaviour
     private void Falling()
     {
 
-        if (currentState == PlayerState.dead)
+        if (IsDead)
         {
             playerAnimator.SetBool("Falling", false);
             return;
         }
 
-
-        bool playFallingAnimation = playerRigidBody.velocity.y < -fallAnimationInitiateSpeed; //if player is moving
+        if (playerRigidBody.velocity.y < -fallAnimationInitiateSpeed)
+        {
+            
+                IsFalling = true;
+            
+        }
 
         if (playerFeetCollider.IsTouchingLayers(LayerMask.GetMask("Ground")) || playerFeetCollider.IsTouchingLayers(LayerMask.GetMask("DropThroughGround")))
         {
-            playFallingAnimation = false;
-            //currentState = PlayerState.idle;//do this if also grappling hook is disabled
+            IsFalling = false;
         }
 
-        //if(!(currentState == PlayerState.grappling))
-        //{
-        //    //currentState = PlayerState.falling;//these seems wrong, it runs always that if not grappling then falling?
-        //}
-        //else
-        //{
-        //    playerIsFalling = true;//so always on falling animation if grappling (may need to chagne all this around later ifthere is a grappling animation)
-        //}
-
-        if(currentState == PlayerState.grappling)
-        {
-            playFallingAnimation = true; //always on falling animation if grappling
-        }
-        else
-        {
-            currentState = PlayerState.falling;
-        }
 
         //if(currentState == PlayerState.falling)
         //{
@@ -186,7 +193,7 @@ public class Player : MonoBehaviour
         //    playerRigidBody.velocity += new Vector2(horizontalInput * fallMoveSpeed, 0f);
         //}
 
-        playerAnimator.SetBool("Falling", playFallingAnimation);
+        playerAnimator.SetBool("Falling", IsFalling || IsGrappling);
     }
 
     private void DropDown()
@@ -233,7 +240,7 @@ public class Player : MonoBehaviour
 
     private void FlipSprite()
     {
-        if (currentState == PlayerState.stagger || currentState == PlayerState.dead || currentState == PlayerState.grappling)//added grappling for compatibility with new ope system
+        if (IsStaggered || IsDead || IsAttacking)//****add grappling for compatibility with new ope system
             return;//so player doesn't turn around when staggered or killed
 
         bool playerHasHorizontalSpeed = Mathf.Abs(playerRigidBody.velocity.x) > Mathf.Epsilon; //if player is moving because epsilon is the smallest float
@@ -248,7 +255,7 @@ public class Player : MonoBehaviour
     {
         //new
         playerAnimator.SetTrigger("Attack");
-        currentState = PlayerState.attack;
+        IsAttacking = true;
 
 
         //playerAnimator.SetBool("attacking", true);//should be trigger and no need for coroutine?
@@ -256,10 +263,8 @@ public class Player : MonoBehaviour
         //yield return null;//waits one frame
         //playerAnimator.SetBool("attacking", false);//so it won't go back in here (why not just use a trigger type?)
         yield return new WaitForSeconds(.3f);//this still needed?
-        if (currentState != PlayerState.interact)
-        {
-            currentState = PlayerState.walk;
-        }
+
+        IsAttacking = false;
     }
 
     //public void RaiseItem()
@@ -311,7 +316,7 @@ public class Player : MonoBehaviour
     {
         playerAnimator.SetBool("Falling", false);
         playerAnimator.SetBool("IsDead", true);//why will this not play from falling?
-        currentState = PlayerState.dead;//i want to be able to set player state to dead here but it will prevent the death animation from happening sometimes, like maybe when falling?
+        IsDead = true;//i want to be able to set player state to dead here but it will prevent the death animation from happening sometimes, like maybe when falling?
         IsDead = true;
         //Destroy(this.gameObject, 3f);
         yield return new WaitForSeconds(3f);
@@ -325,9 +330,27 @@ public class Player : MonoBehaviour
             yield return new WaitForSeconds(knockTime);
             playerRigidBody.velocity = Vector2.zero;
             playerAnimator.SetBool("Stagger", false);
-
-            currentState = PlayerState.idle;//set back to idel after being knocked (was set to stagger before getting in here)
+            IsStaggered = false;
+            IsMoving = false;//set back to idel after being knocked (was set to stagger before getting in here)
             playerRigidBody.velocity = Vector2.zero;
+        }
+    }
+
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == "Interactable" && interactFocus == null)
+        {
+            interactFocus = collision.gameObject.GetComponent<Interactable>();
+            interactFocus.OnFocused();
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == "Interactable" && interactFocus != null)
+        {
+            interactFocus.OnDefocused();
+            interactFocus = null;
         }
     }
 }
