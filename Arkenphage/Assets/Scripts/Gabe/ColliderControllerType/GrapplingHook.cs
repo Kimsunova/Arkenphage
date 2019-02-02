@@ -110,13 +110,16 @@ public class GrapplingHook : MonoBehaviour
                 grappleJoint.distance = Vector2.Distance(transform.position, hit.point) - distanceToSubtract;
                 grappleJoint.connectedAnchor = hit.point;
 
-                player.currentState = PlayerState.grappling;//without setting it to this player will stop midswing because it will be receiving run input and at 0
+                player.IsGrappling = true;//without setting it to this player will stop midswing because it will be receiving run input and at 0
+            }
+            else
+            {
+                player.IsGrappling = false;
             }
         }
 
         if (grappleJoint.enabled)
         {
-            var a = player.currentState;
 
             playerFeetCollider.sharedMaterial = slipperyFeet;
 
@@ -145,6 +148,7 @@ public class GrapplingHook : MonoBehaviour
 
 
             ropeRenderer.enabled = true;
+            player.IsGrappling = true;//maybe redundant
             ropeRenderer.positionCount = 2;
             ropeRenderer.SetPosition(0, transform.position);
             ropeRenderer.SetPosition(1, new Vector3(grappleJoint.connectedAnchor.x, grappleJoint.connectedAnchor.y, 0));
@@ -202,7 +206,8 @@ public class GrapplingHook : MonoBehaviour
                 playerFeetCollider.sharedMaterial = null;
                 ropeRenderer.enabled = false;
                 grappleJoint.enabled = false;
-                playerRigidBody.gravityScale = 1;
+                playerRigidBody.gravityScale = 1;//this still needed?
+                player.jump = true;//necessary to change this in here?
 
                 //add jump if jump off, although should be in direction of travel rather than straight up?
                 //Vector2 jumpVelocityToAdd = new Vector2(0, jumpFromGrappleStrength);
@@ -217,7 +222,7 @@ public class GrapplingHook : MonoBehaviour
                 Vector2 jumpOffGrappleVelocity = direction * jumpFromGrappleStrength;//should I add something extra to the y direction here?
                 playerRigidBody.velocity += jumpOffGrappleVelocity;
                 //end alternative jump
-
+                player.jump = false;
                 //player.currentState = PlayerState.falling;
                 StartCoroutine(WaitAfterGrappleToMaintainMomentum(isInHookshotMode));//should just jump straight up and off of rope with above state change, or maintain momentum from jump like below?
                 //playerAnimator.SetBool("Jumping", true);//could have a jump from rope animation later
@@ -231,7 +236,8 @@ public class GrapplingHook : MonoBehaviour
         {
             if (playerFeetCollider.IsTouchingLayers(LayerMask.GetMask("Ground")) || playerFeetCollider.IsTouchingLayers(LayerMask.GetMask("DropThroughGround")))
             {
-                player.currentState = PlayerState.idle;//this is to stop falling once you have disabled the rope and hit the ground
+                player.IsFalling = false;//this is to stop falling once you have disabled the rope and hit the ground
+                player.IsGrappling = false;
             }
         }
 
@@ -254,11 +260,12 @@ public class GrapplingHook : MonoBehaviour
             waitTime = .15f;//if in hook shot need control right after disconnnect more likely, rather than needing momentum right after disconnect
         }
 
-        yield return new WaitForSeconds(waitTime);
+        yield return new WaitForSeconds(waitTime);//if you hit the ground during the wait time you end up not able to move
 
         if (!grappleJoint.enabled) //this is needed again becuase if you immediately go back to a grapple before this coroutine is over then it sets it to grapple above and then to walk here when this coroutine is over but you are grappling again
         {
-            player.currentState = PlayerState.falling;//perhaps should be idle or walk? 
+            player.IsFalling = true;//perhaps should be idle or walk? 
+            player.IsGrappling = false;
         }
     }
 }

@@ -32,7 +32,7 @@ public class Knockback : MonoBehaviour
 
         if (otherIsPlayer)
         {
-            if (player.currentState == PlayerState.dead)
+            if (player.IsDead)
                 return;
         }
         if (otherIsEnemy)
@@ -43,7 +43,7 @@ public class Knockback : MonoBehaviour
         }
         if (thisIsPlayer)
         {
-            if (this.GetComponentInParent<Player>().currentState == PlayerState.dead)
+            if (this.GetComponentInParent<Player>().IsDead)
                 return;
         }
         if (thisIsEnemy)
@@ -76,9 +76,9 @@ public class Knockback : MonoBehaviour
 
                 if (otherIsPlayer)
                 {
-                    if (player.currentState != PlayerState.stagger)
+                    if (!player.IsStaggered)
                     {
-                        player.currentState = PlayerState.stagger;
+                        player.IsStaggered = true;
                     }
                     player.Knock(knockTime, damage);//so player can be hurt if staggered
                 }
