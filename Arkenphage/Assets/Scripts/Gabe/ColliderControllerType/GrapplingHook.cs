@@ -138,7 +138,7 @@ public class GrapplingHook : MonoBehaviour
             {//or could be not dropthrough ground or not hookshot mode, as in it just can't be both
                 var direction = 1;
 
-                if(playerRigidBody.velocity.x < 0)
+                if (playerRigidBody.velocity.x < 0)
                 {
                     direction = -1;
                 }
@@ -185,10 +185,15 @@ public class GrapplingHook : MonoBehaviour
                 {
                     if (IsDropdownTarget)
                     {
+                        //need to edit this to place a max on the addedJumpThroughvelocity, because if you do it from a fast swing you can get thrown too high through the dropthrough platform
                         Vector2 direction = grappleJoint.connectedAnchor - new Vector2(this.transform.position.x, this.transform.position.y);
                         direction.Normalize();
                         Vector2 addedJumpThrough = direction * upOverDropdownPlatformJumpStrength;
-                        playerRigidBody.velocity += addedJumpThrough;
+
+                        if (playerRigidBody.velocity.y < 20f)//this 20f is a magic number, not sure if correct, but its like, if player velocity is already really fast in teh positive y then dont add anymore to get over the platform, because otherwise the below can shoot you too far up
+                        {
+                            playerRigidBody.velocity += addedJumpThrough;//only do this if the player velocity in the y is below a certain point i think
+                        }
 
                     }
                     ropeRenderer.enabled = false;

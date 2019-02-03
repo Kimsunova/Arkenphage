@@ -81,7 +81,7 @@ public class Player : MonoBehaviour
         {
             StartCoroutine(AttackCo());
         }
-        else if (!IsDead && !IsGrappling && !IsStaggered)//need falling? should be able to move while falling?
+        else if (!IsDead && !IsGrappling && !IsStaggered && !IsAttacking)//need falling? should be able to move while falling?
         {
             //UpdateAnimationAndMove();
             Run();
@@ -186,6 +186,11 @@ public class Player : MonoBehaviour
             IsFalling = false;
         }
 
+        if (IsAttacking)//this block lets you attack while falling or grappling, but also stops momentum if attack while grappling
+        {
+            IsFalling = false;
+            IsGrappling = false;
+        }
 
         //if(currentState == PlayerState.falling)
         //{
