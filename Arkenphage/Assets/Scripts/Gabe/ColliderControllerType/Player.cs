@@ -56,7 +56,7 @@ public class Player : MonoBehaviour
     CircleCollider2D playerFeetCollider;
     PolygonCollider2D attackHitBox;
 
-
+    public Interactable interactFocus;
 
 
 
@@ -96,10 +96,10 @@ public class Player : MonoBehaviour
             return;//this isn't working and player can still move around when state is dead
         }
 
-       
-
-
-
+        if (Input.GetKeyDown(KeyCode.P) && interactFocus != null)
+        {
+            interactFocus.Interact();
+        }
 
 
         DropDown();
@@ -333,6 +333,24 @@ public class Player : MonoBehaviour
             IsStaggered = false;
             IsMoving = false;//set back to idel after being knocked (was set to stagger before getting in here)
             playerRigidBody.velocity = Vector2.zero;
+        }
+    }
+
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == "Interactable" && interactFocus == null)
+        {
+            interactFocus = collision.gameObject.GetComponent<Interactable>();
+            interactFocus.OnFocused();
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == "Interactable" && interactFocus != null)
+        {
+            interactFocus.OnDefocused();
+            interactFocus = null;
         }
     }
 }

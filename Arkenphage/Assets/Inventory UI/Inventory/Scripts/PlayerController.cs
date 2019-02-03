@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour {
 
-    public Interactable focus;
+    public Interactable interactFocus;
 
     public BoxCollider2D groundCheck;
 
@@ -34,9 +34,9 @@ public class PlayerController : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.Return) && grounded == true)
             jumpStart = true;
 
-        if (Input.GetKeyDown(KeyCode.P) && focus != null)
+        if (Input.GetKeyDown(KeyCode.P) && interactFocus != null)
         {
-            focus.Interact();
+            interactFocus.Interact();
         }
     }
 
@@ -83,19 +83,19 @@ public class PlayerController : MonoBehaviour {
 
     private void OnTriggerStay2D(Collider2D collision)
     {
-        if (collision.gameObject.tag == "Interactable" && focus == null)
+        if (collision.gameObject.tag == "Interactable" && interactFocus == null)
         {
-            focus = collision.gameObject.GetComponent<Interactable>();
-            focus.OnFocused();
+            interactFocus = collision.gameObject.GetComponent<Interactable>();
+            interactFocus.OnFocused();
         }
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.gameObject.tag == "Interactable" && focus != null)
+        if (collision.gameObject.tag == "Interactable" && interactFocus != null)
         {
-            focus.OnDefocused();
-            focus = null;
+            interactFocus.OnDefocused();
+            interactFocus = null;
         }
     }
 }
