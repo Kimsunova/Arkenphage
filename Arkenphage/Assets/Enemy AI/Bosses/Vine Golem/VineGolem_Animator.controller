@@ -80,6 +80,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8534ed25c5005e046873b6b082da3412, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  speed: 25
 --- !u!1101 &1101025299663898106
 AnimatorStateTransition:
   m_ObjectHideFlags: 1

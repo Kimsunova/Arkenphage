@@ -65,7 +65,7 @@ public class Boss_VineGolem : EnemyAI {
 
     int PickRandomAction()
     {
-        randomAction = Random.Range(0, (int)VineGolemState.NUM_STATES);
+        /*randomAction = Random.Range(0, (int)VineGolemState.NUM_STATES);
         if (randomAction != lastAction)
         {
             lastAction = randomAction;
@@ -73,5 +73,7 @@ public class Boss_VineGolem : EnemyAI {
         }
         else
             return PickRandomAction();
+    */
+        return 1;
     }
 }
