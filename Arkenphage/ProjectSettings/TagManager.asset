@@ -1,0 +1,60 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!78 &1
+TagManager:
+  serializedVersion: 2
+  tags:
+  - Grapple
+  - Interactable
+  layers:
+  - Default
+  - TransparentFX
+  - Ignore Raycast
+  - 
+  - Water
+  - UI
+  - 
+  - 
+  - Ground
+  - Player
+  - Background
+  - Enemy
+  - PlayerWeapon
+  - EnemyWeapon
+  - Hazards
+  - DropThroughGround
+  - Rope
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  m_SortingLayers:
+  - name: Default
+    uniqueID: 0
+    locked: 0
+  - name: Background
+    uniqueID: 4150597023
+    locked: 0
+  - name: Enemy
+    uniqueID: 249478139
+    locked: 0
+  - name: Player
+    uniqueID: 17144797
+    locked: 0
+  - name: Foreground
+    uniqueID: 2557665577
+    locked: 0
+  - name: Hazards
+    uniqueID: 3280360257
+    locked: 0
