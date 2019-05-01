@@ -19,22 +19,18 @@ using UnityStandardAssets.CrossPlatformInput;
 [RequireComponent(typeof(Rigidbody2D), typeof(Animator), typeof(Collider2D))]
 public class Player : MonoBehaviour
 {
-
     //Configurable Parameters
     [SerializeField] float runSpeed = 5f;
     [SerializeField] float jumpStrength = 5f;
     [SerializeField] float fallAnimationInitiateSpeed = 5f;
     [SerializeField] float fallMoveSpeed = 5f;
-
-
+    [SerializeField] float dodgeTime = 1f;
 
     //Player State
     //public PlayerState currentState;
     public FloatValue currentHealth;
     public Signal playerHealthSignal;
     public Signal playerHit;
-
-
 
     public bool jump = false;
     public bool IsDead = false;
@@ -46,8 +42,11 @@ public class Player : MonoBehaviour
     public bool IsStaggered = false;
     public bool IsInteracting = false;
 
-    //public bool IsGrappling { get; set; }//should i use these properties like this?
+    public bool IsParrying = false;
+    public bool IsDodging = false;
+    public bool invincible = false;
 
+    //public bool IsGrappling { get; set; }//should i use these properties like this?
 
     //Cached Component References
     Rigidbody2D playerRigidBody;
@@ -57,8 +56,6 @@ public class Player : MonoBehaviour
     PolygonCollider2D attackHitBox;
 
     public Interactable interactFocus;
-
-
 
     void Start()
     {
@@ -74,8 +71,6 @@ public class Player : MonoBehaviour
 
     private void FixedUpdate()
     {
-        
-
         //new
         if (CrossPlatformInputManager.GetButtonDown("Fire1") && !IsAttacking && !IsStaggered)
         {
@@ -113,6 +108,7 @@ public class Player : MonoBehaviour
         Falling();//this still triggers when dead?, like if you die when in the falling animation (see falling into spike pit)
         HazardDeath();
 
+        ParryOrDodge();
     }
 
     private void Run()
@@ -294,17 +290,20 @@ public class Player : MonoBehaviour
 
     public void Knock(float knockTime, float damage)
     {
-        currentHealth.RuntimeValue -= damage;
-        playerHealthSignal.Raise();
-        if (currentHealth.RuntimeValue > 0)
+        if (invincible == false)
         {
-            playerHit.Raise();
-            playerAnimator.SetBool("Stagger", true);
-            StartCoroutine(KnockCo(knockTime));
-        }
-        else
-        {
-            StartCoroutine(DeathEffect());
+            currentHealth.RuntimeValue -= damage;
+            playerHealthSignal.Raise();
+            if (currentHealth.RuntimeValue > 0)
+            {
+                playerHit.Raise();
+                playerAnimator.SetBool("Stagger", true);
+                StartCoroutine(KnockCo(knockTime));
+            }
+            else
+            {
+                StartCoroutine(DeathEffect());
+            }
         }
     }
 
@@ -314,6 +313,24 @@ public class Player : MonoBehaviour
         if (playerBodyCollider.IsTouchingLayers(LayerMask.GetMask("Hazards")))//its not detectingthe layer mask
         {
             StartCoroutine(DeathEffect());
+        }
+    }
+
+    public void ParryOrDodge()
+    {
+        //Parry/Dodge button == E
+        if (CrossPlatformInputManager.GetButtonDown("Parry/Dodge"))
+        {
+            invincible = true;
+            if (playerAnimator.GetBool("Running") == true)
+            {
+                playerAnimator.SetBool("Dodge", true);
+                StartCoroutine(DodgeCo(dodgeTime));
+            }
+            else
+            {
+                playerAnimator.SetBool("Parry", true);
+            }
         }
     }
 
@@ -338,6 +355,32 @@ public class Player : MonoBehaviour
             IsStaggered = false;
             IsMoving = false;//set back to idel after being knocked (was set to stagger before getting in here)
             playerRigidBody.velocity = Vector2.zero;
+        }
+    }
+
+    private IEnumerator ParryCo(float dodgeTime)
+    {
+        if (playerRigidBody != null)
+        {
+            yield return new WaitForSeconds(dodgeTime);
+            //playerRigidBody.velocity = Vector2.zero;
+            playerAnimator.SetBool("Dodge", false);
+            IsDodging = false;
+            invincible = false;
+            //IsMoving = false;
+        }
+    }
+
+    private IEnumerator DodgeCo(float dodgeTime)
+    {
+        if (playerRigidBody != null)
+        {
+            yield return new WaitForSeconds(dodgeTime);
+            //playerRigidBody.velocity = Vector2.zero;
+            playerAnimator.SetBool("Dodge", false);
+            IsDodging= false;
+            invincible = false;
+            //IsMoving = false;
         }
     }
 
