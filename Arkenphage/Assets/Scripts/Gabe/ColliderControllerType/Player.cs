@@ -330,6 +330,7 @@ public class Player : MonoBehaviour
             else
             {
                 playerAnimator.SetBool("Parry", true);
+                StartCoroutine(ParryCo(dodgeTime));
             }
         }
     }
@@ -364,9 +365,9 @@ public class Player : MonoBehaviour
         {
             yield return new WaitForSeconds(dodgeTime);
             //playerRigidBody.velocity = Vector2.zero;
-            playerAnimator.SetBool("Dodge", false);
+            playerAnimator.SetBool("Parry", false);
             IsDodging = false;
-            invincible = false;
+            //invincible = false;
             //IsMoving = false;
         }
     }
