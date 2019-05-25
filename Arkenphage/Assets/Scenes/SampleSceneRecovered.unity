@@ -129630,7 +129630,8 @@ GameObject:
   - component: {fileID: 713646160}
   - component: {fileID: 713646162}
   - component: {fileID: 713646161}
-  m_Layer: 12
+  - component: {fileID: 713646163}
+  m_Layer: 17
   m_Name: PlayerParryCollider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -129698,6 +129699,20 @@ PolygonCollider2D:
       - {x: 0.3813768, y: -0.919428}
       - {x: 1.6125174, y: -0.9091978}
       - {x: 1.6782055, y: 0.22314262}
+--- !u!114 &713646163
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 713646159}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd0a9ae58cd90a5409209cc60372b9cd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  thrust: 0
+  knockTime: 0
+  damage: 0
 --- !u!1 &732172077
 GameObject:
   m_ObjectHideFlags: 0

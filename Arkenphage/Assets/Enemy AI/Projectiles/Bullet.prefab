@@ -92,6 +92,7 @@ MonoBehaviour:
   speed: 3
   destroyTime: 5
   damage: 0
+  knockTime: 0
 --- !u!212 &212411184798688650
 SpriteRenderer:
   m_ObjectHideFlags: 1

@@ -21,6 +21,11 @@ public class Knockback : MonoBehaviour
         var otherIsEnemy = enemy != null;
         var thisIsEnemy = this.GetComponentInParent<Enemy>() != null;
 
+        var bullet = other.GetComponent<Bullet>();
+        var otherIsBullet = bullet != null;
+        var thisIsBullet = this.GetComponentInParent<Bullet>() != null;
+
+
         //for breakable objects later
         //var breakable = other.GetComponent<Breakable>();
         //var targetHasBreakable = breakable != null;

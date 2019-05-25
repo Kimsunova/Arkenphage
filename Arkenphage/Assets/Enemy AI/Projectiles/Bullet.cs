@@ -4,9 +4,11 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour {
 
+    protected int direction = -1;
     public float speed, destroyTime, damage;
     protected Rigidbody2D rb;
     [SerializeField] float knockTime;
+    [SerializeField] bool attackPlayer = true; //if "false", the bullet can still damage the player, but can also hurt enemies
 
 	// Use this for initialization
 	void Start () {
@@ -26,6 +28,17 @@ public class Bullet : MonoBehaviour {
             collision.GetComponent<Player>().Knock(knockTime, damage);
             Destroy(gameObject);
         }
+        //else if (collision.tag == "Enemy" && attackPlayer != true){
+        else if (collision.gameObject.GetComponent<Enemy>() != null)
+        {
+            Parried();
+        }
+    }
+
+    public void Parried()
+    {
+        direction *= -1;
+        attackPlayer = !attackPlayer;
     }
 
 }
