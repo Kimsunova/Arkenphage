@@ -52,7 +52,7 @@ public class Player : MonoBehaviour
     Rigidbody2D playerRigidBody;
     Animator playerAnimator;
     CapsuleCollider2D playerBodyCollider;
-    CircleCollider2D playerFeetCollider;
+    BoxCollider2D playerFeetCollider;
     PolygonCollider2D attackHitBox;
 
     public Interactable interactFocus;
@@ -62,7 +62,7 @@ public class Player : MonoBehaviour
         playerRigidBody = GetComponent<Rigidbody2D>();
         playerAnimator = GetComponent<Animator>();
         playerBodyCollider = GetComponent<CapsuleCollider2D>();
-        playerFeetCollider = GetComponent<CircleCollider2D>();
+        playerFeetCollider = GetComponent<BoxCollider2D>();
         //currentState = PlayerState.walk;
         //IsIdle = true;
         attackHitBox = GetComponentInChildren<PolygonCollider2D>();
