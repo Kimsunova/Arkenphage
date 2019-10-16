@@ -19,4 +19,21 @@ public class DoorScript : MonoBehaviour {
         SceneManager.LoadScene(sceneToGoTo, LoadSceneMode.Single);
         player.transform.position = moveToPoint;
     }
+
+    public void OnTriggerEnter2D(Collider2D collision)
+    { print("Endter"); }
+
+    public void OnTriggerStay2D(Collider2D collision)
+    {
+        print("sitty");
+        if (collision.gameObject.tag == "Player")
+        {
+            if (Input.GetKeyDown(KeyCode.O))
+            {
+                print("B");
+
+                GoToScene();
+            }
+        }
+    }
 }
